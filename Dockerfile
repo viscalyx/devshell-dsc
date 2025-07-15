@@ -8,7 +8,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 # ---- Non‑interactive apt install -------------------------------------------
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-        zsh git curl wget ca-certificates locales lsb-release dotnet-sdk-8.0 && \
+        zsh git curl wget ca-certificates locales lsb-release dotnet-sdk-8.0 sudo && \
     locale-gen en_US.UTF-8 && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
