@@ -1,0 +1,21 @@
+# Exclude Git metadata and ignore files
+.git
+.gitignore
+
+# macOS metadata
+.DS_Store
+
+# VS Code settings folder
+.vscode/
+
+# Python artifacts
+__pycache__/
+*.py[cod]
+
+# Node modules
+node_modules/
+
+# Project-specific files
+docker-compose.yml
+README.md
+cspell.json
