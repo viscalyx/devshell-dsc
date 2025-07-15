@@ -55,3 +55,29 @@ docker-compose run --rm dev
 ```
 
 This will build the image if needed and launch a Zsh session inside the `dev` service container.
+
+## Rebuilding the Container
+
+### Docker
+
+```sh
+docker build -t devshell:dsc .
+```
+
+### Docker Compose
+
+```sh
+docker-compose build dev
+```
+
+### Docker (No Cache)
+
+```sh
+docker build --no-cache -t devshell:dsc .
+```
+
+### Docker Compose (No Cache)
+
+```sh
+docker-compose build --no-cache dev
+```
