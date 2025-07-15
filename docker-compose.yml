@@ -1,0 +1,10 @@
+version: '3.8'
+services:
+  dev:
+    build: .
+    volumes:
+      - .:/work
+    working_dir: /work
+    entrypoint: zsh
+    stdin_open: true
+    tty: true
