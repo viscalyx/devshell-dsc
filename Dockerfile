@@ -8,7 +8,8 @@ ENV DEBIAN_FRONTEND=noninteractive
 # ---- Non‑interactive apt install -------------------------------------------
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-        zsh git curl wget ca-certificates locales lsb-release dotnet-sdk-8.0 sudo && \
+        zsh git curl wget ca-certificates locales lsb-release fontconfig dotnet-sdk-8.0 sudo vim \
+        openssh-client && \
     locale-gen en_US.UTF-8 && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
@@ -32,24 +33,77 @@ RUN ARCH=$(dpkg --print-architecture) && \
         echo "Unsupported architecture: $ARCH" && exit 1; \
     fi
 
+# ---- Verify & keep image slim ----------------------------------------------
+RUN zsh --version && pwsh -NoLogo -Command '$PSVersionTable'
+
 # ---- Opinionated Oh My Zsh (unattended) ------------------------------------
-RUN wget -q https://github.com/deluan/zsh-in-docker/releases/download/v1.2.1/zsh-in-docker.sh -O /tmp/zsh-in-docker.sh && \
-    sh /tmp/zsh-in-docker.sh -- -p git -p ssh-agent && \
+RUN sh -c "$(wget -O- https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" --unattended && \
+    git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-/root/.oh-my-zsh/custom}/plugins/zsh-autosuggestions && \
+    git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting ${ZSH_CUSTOM:-/root/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting && \
+    git clone --depth=1 https://github.com/zdharma-continuum/fast-syntax-highlighting ${ZSH_CUSTOM:-/root/.oh-my-zsh/custom}/plugins/fast-syntax-highlighting && \
+    git clone --depth=1 https://github.com/marlonrichert/zsh-autocomplete ${ZSH_CUSTOM:-/root/.oh-my-zsh/custom}/plugins/zsh-autocomplete && \
+    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-/root/.oh-my-zsh/custom}/themes/powerlevel10k && \
+    # Install Powerlevel10k MesloLGS NF fonts
+    wget -O /tmp/MesloLGS_NF_Regular.ttf https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf && \
+    wget -O /tmp/MesloLGS_NF_Bold.ttf https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold.ttf && \
+    wget -O /tmp/MesloLGS_NF_Italic.ttf https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf && \
+    wget -O /tmp/MesloLGS_NF_Bold_Italic.ttf https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf && \
+    mkdir -p /usr/share/fonts/truetype/powerlevel10k && \
+    mv /tmp/*.ttf /usr/share/fonts/truetype/powerlevel10k/ && \
+    fc-cache -fv && \
     chsh -s /usr/bin/zsh root && \
-    rm /tmp/zsh-in-docker.sh
+    # configure default theme and plugins for root
+    sed -i 's|^ZSH_THEME=.*|ZSH_THEME="powerlevel10k/powerlevel10k"|' /root/.zshrc && \
+    sed -i 's|^plugins=.*|plugins=(git ssh-agent zsh-autosuggestions zsh-syntax-highlighting fast-syntax-highlighting zsh-autocomplete)|' /root/.zshrc && \
+    echo '[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh' >> /root/.zshrc && \
+    # Prepend Powerlevel10k instant prompt block to root .zshrc
+    printf '%s\n' \
+    '# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.' \
+    '# Initialization code that may require console input (password prompts, [y/n]' \
+    '# confirmations, etc.) must go above this block; everything else may go below.' \
+    'if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then' \
+    '  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"' \
+    'fi' | cat - /root/.zshrc > /root/.zshrc.tmp && mv /root/.zshrc.tmp /root/.zshrc
+
+RUN mkdir -p /root/.ssh && chmod 700 /root/.ssh && \
+    echo 'export EDITOR=vim' >> /root/.zshrc && \
+    echo 'export VISUAL=vim' >> /root/.zshrc && \
+    echo 'export DEBIAN_FRONTEND=dialog' >> /root/.zshrc && \
+    # Automatically cd into ~/source if it exists
+    echo 'if [[ -d ~/source ]]; then' >> /root/.zshrc && \
+    echo '  cd ~/source' >> /root/.zshrc && \
+    echo 'fi' >> /root/.zshrc
 
 # ---- PowerShell: ensure latest patch & install DSC v3 -----------------------
 RUN pwsh -NoLogo -NoProfile -Command \
     'Install-PSResource PSDSC -TrustRepository -Quiet; Install-DscExe -IncludePrerelease -Force'
 
-# ---- Verify & keep image slim ----------------------------------------------
-RUN zsh --version && pwsh -NoLogo -Command '$PSVersionTable'
+# Switch back to dialog for any ad-hoc use of apt-get
+ENV DEBIAN_FRONTEND=dialog
+
+# Add custom Powerlevel10k config
+COPY .pk10k.zsh /root/.p10k.zsh
+
+# ---- Create non-root user 'developer' with sudo privileges ----
+RUN useradd -ms /usr/bin/zsh developer && \
+    echo "developer ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/developer && \
+    echo 'Defaults secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"' > /etc/sudoers.d/secure_path && \
+    chmod 0440 /etc/sudoers.d/developer /etc/sudoers.d/secure_path
+
+# ---- Copy root’s config to the user 'developer' ----
+RUN cp -R /root/.oh-my-zsh /home/developer/ && \
+    cp /root/.zshrc /home/developer/.zshrc && \
+    cp /root/.p10k.zsh /home/developer/.p10k.zsh && \
+    touch /home/developer/.zprofile /home/developer/.zshenv /home/developer/.zlogin && \
+    sed -i 's|^export ZSH=.*|export ZSH="$HOME/.oh-my-zsh"|' /home/developer/.zshrc && \
+    chown -R developer:developer /home/developer && \
+    mkdir -p /home/developer/.ssh && chmod 700 /home/developer/.ssh && chown developer:developer /home/developer/.ssh
+
+USER developer
+WORKDIR /home/developer
 
 # ---- Healthcheck -----------------------------------------------------------
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 CMD pwsh -NoLogo -Command '$PSVersionTable | Out-Null || exit 1'
-
-# Switch back to dialog for any ad-hoc use of apt-get
-ENV DEBIAN_FRONTEND=dialog
 
 # ---- Default shell ----------------------------------------------------------
 CMD ["zsh"]
