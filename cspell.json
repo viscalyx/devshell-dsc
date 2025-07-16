@@ -7,6 +7,10 @@
     "PSDSC",
     "dpkg",
     "elif",
-    "devshell"
+    "devshell",
+    "fontconfig",
+    "powerline",
+    "powerlevel",
+    "Meslo"
   ]
 }
