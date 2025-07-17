@@ -23,20 +23,6 @@ Ensure the following are installed on your host system:
 
 Launch an interactive development shell with your project directory mounted:
 
->[!NOTE]
->The container will mount the directory you run this command from to `/home/developer/work`.
-
-```bash
-# Standard user
-docker-compose -f "${HOME}/source/devshell-dsc/docker-compose.yml" run --rm dev
-
-# Root user
-docker-compose -f "${HOME}/source/devshell-dsc/docker-compose.yml" run --rm --user root dev
-```
-
->[!IMPORTANT]
-> Change the above path to where the repository was cloned.
-
 ## Pull and Run from Docker Hub
 
 Use the published image from any local folder by pulling and running it with your current directory mounted:
@@ -50,3 +36,26 @@ docker run --rm -it \
   -v "$(pwd)":/home/developer/work \
   viscalyx/devshell-dsc:latest
 ```
+
+## Clone GitHub repository
+
+Clone the repository via SSH:
+
+```bash
+git clone git@github.com:viscalyx/devshell-dsc.git
+cd devshell-dsc
+```
+
+>[!NOTE]
+>The container will mount the directory you run this command from to `/home/developer/work`.
+
+```bash
+# Standard user
+docker-compose -f "${HOME}/source/devshell-dsc/docker-compose.yml" run --rm dev
+
+# Root users
+docker-compose -f "${HOME}/source/devshell-dsc/docker-compose.yml" run --rm --user root dev
+```
+
+>[!IMPORTANT]
+> Change the above path to where the repository was cloned.
