@@ -12,7 +12,7 @@ To launch the development shell, run the following command in your terminal:
 
 ### Using Docker
 
-To launch the container and login as _root_:
+To launch the container and log in as _root_:
 
 ```sh
 docker run --rm -it devshell:dsc
