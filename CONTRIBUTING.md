@@ -56,7 +56,7 @@ docker-compose build --no-cache dev
 
 ## Publishing
 
-Publishing happens automatically when GitHub release tag using semantic versioning in the format `v1.0.0` is created.
+Publishing happens automatically when a GitHub release tag using semantic versioning in the format `v1.0.0` is created.
 
 ### Build
 
@@ -99,7 +99,7 @@ docker tag viscalyx/devshell-dsc:latest ghcr.io/viscalyx/devshell-dsc:latest
 Login to GHCR and push:
 
 ```sh
-op item get "<item>>" --field password --reveal | docker login ghcr.io -u viscalyxbot --password-stdin
+op item get "<item>" --field password --reveal | docker login ghcr.io -u viscalyxbot --password-stdin
 docker push ghcr.io/viscalyx/devshell-dsc:latest
 ```
 
