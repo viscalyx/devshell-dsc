@@ -11,12 +11,13 @@
     "fontconfig",
     "powerline",
     "powerlevel",
-    "Meslo",
+    "meslo",
     "passwordless",
     "dockerized",
     "dockerhub",
     "buildx",
     "viscalyx",
-    "viscalyxbot"
+    "viscalyxbot",
+    "buildcache"
   ]
 }
