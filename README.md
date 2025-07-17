@@ -36,3 +36,17 @@ docker-compose -f "${HOME}/source/devshell-dsc/docker-compose.yml" run --rm --us
 
 >[!IMPORTANT]
 > Change the above path to where the repository was cloned.
+
+## Pull and Run from Docker Hub
+
+Use the published image from any local folder by pulling and running it with your current directory mounted:
+
+```bash
+# Pull the latest image
+docker pull viscalyx/devshell-dsc:latest
+
+# Run interactively, mounting current directory to /home/developer/work
+docker run --rm -it \
+  -v "$(pwd)":/home/developer/work \
+  viscalyx/devshell-dsc:latest
+```
