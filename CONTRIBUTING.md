@@ -25,7 +25,7 @@ docker run --rm -it devshell:dsc
 To launch the container as **developer** with your current folder mounted at `/home/developer/work`:
 
 ```sh
-docker-compose run --rm dev
+docker compose run --rm dev
 ```
 
 ## Rebuilding the Container
@@ -39,7 +39,7 @@ docker build -t devshell:dsc .
 ### Docker Compose
 
 ```sh
-docker-compose build dev
+docker compose build dev
 ```
 
 ### Docker (No Cache)
@@ -51,7 +51,7 @@ docker build --no-cache -t devshell:dsc .
 ### Docker Compose (No Cache)
 
 ```sh
-docker-compose build --no-cache dev
+docker compose build --no-cache dev
 ```
 
 ## Publishing
