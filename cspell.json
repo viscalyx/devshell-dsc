@@ -4,7 +4,7 @@
   "ignoreWords": [
     "noninteractive",
     "chsh",
-    "PSDSC",
+    "psdsc",
     "dpkg",
     "elif",
     "devshell",
@@ -13,9 +13,10 @@
     "powerlevel",
     "Meslo",
     "passwordless",
-    "Dockerized",
-    "DOCKERHUB",
-    "Buildx",
-    "viscalyx"
+    "dockerized",
+    "dockerhub",
+    "buildx",
+    "viscalyx",
+    "viscalyxbot"
   ]
 }
