@@ -41,6 +41,8 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
+          cache-from: type=registry,ref=ghcr.io/viscalyx/devshell-dsc:buildcache
++         cache-to: type=registry,ref=ghcr.io/viscalyx/devshell-dsc:buildcache,mode=max
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
