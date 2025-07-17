@@ -23,6 +23,9 @@ Ensure the following are installed on your host system:
 
 Launch an interactive development shell with your project directory mounted:
 
+>[!NOTE]
+>The container will mount the directory you run this command from to `/home/developer/work`.
+
 ```bash
 # Standard user
 docker-compose -f "${HOME}/source/devshell-dsc/docker-compose.yml" run --rm dev
