@@ -1,6 +1,6 @@
 # DevShell DSC Container
 
-A fully encapsulated Docker-based development environment optimized for consistency, reproducibility, and rapid onboarding.
+Dockerized Ubuntu 24.04 dev environment with Zsh (Oh My Zsh & Powerlevel10k), PowerShell & DSC v3 pre-configured for seamless developer workflows.
 
 ## Included Tools
 

@@ -12,6 +12,7 @@
     "powerline",
     "powerlevel",
     "Meslo",
-    "passwordless"
+    "passwordless",
+    "Dockerized",
   ]
 }
