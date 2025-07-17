@@ -11,6 +11,7 @@
     "fontconfig",
     "powerline",
     "powerlevel",
-    "Meslo"
+    "Meslo",
+    "passwordless"
   ]
 }
