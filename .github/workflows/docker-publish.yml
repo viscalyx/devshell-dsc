@@ -21,6 +21,7 @@ jobs:
         uses: docker/setup-qemu-action@v3
 
       - name: Set up Docker Buildx
+        id: buildx
         uses: docker/setup-buildx-action@v3
 
       - name: Log in to Docker Hub
@@ -40,9 +41,10 @@ jobs:
       - name: Build and Push Images
         uses: docker/build-push-action@v5
         with:
+          builder: ${{ steps.buildx.outputs.name }}
           context: .
           cache-from: type=registry,ref=ghcr.io/viscalyx/devshell-dsc:buildcache
-+         cache-to: type=registry,ref=ghcr.io/viscalyx/devshell-dsc:buildcache,mode=max
+          cache-to: type=registry,ref=ghcr.io/viscalyx/devshell-dsc:buildcache,mode=max
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
