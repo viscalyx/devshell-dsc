@@ -1,83 +1,32 @@
-# devshell-dsc
+# DevShell DSC Container
 
-This repository provides a Docker-based development shell for working on your projects.
+A fully encapsulated Docker-based development environment optimized for consistency, reproducibility, and rapid onboarding.
+
+## Included Tools
+
+- PowerShell 7.5.2 & DSC v3 support
+- .NET SDK 8.0
+- Git
+- Openssh Client
+- Configured non-root 'developer' user with passwordless sudo
+- Zsh & Oh My Zsh with autosuggestions, syntax-highlighting, fast-syntax-highlighting & zsh-autocomplete, and Powerlevel10k theme with MesloLGS NF fonts
+- Health check via PowerShell
 
 ## Prerequisites
 
-- Docker installed on your system.
+Ensure the following are installed on your host system:
 
-## Starting the DevShell Container
+- Docker (version >= 28.2)
+- Docker Compose (version >= 2.36)
 
-To launch the development shell, run the following command in your terminal:
+## Quick Start
 
-### Zsh
+Launch an interactive development shell with your project directory mounted:
 
-```sh
-docker run --rm -it \
-  -v "$HOME/projects:/work" \
-  -w /work \
-  --name devshell \
-  devshell:dsc
-```
+```bash
+# Standard user
+docker-compose -f "${HOME}/source/devshell-dsc/docker-compose.yml" run --rm dev
 
-### PowerShell
-
-```powershell
-docker run --rm -it `
-  -v "${env:USERPROFILE}/projects:/work" `
-  -w /work `
-  --name devshell `
-  devshell:dsc
-```
-
-This will:
-
-- Mount your local `projects` directory into the container at `/work` using `-v "$HOME/projects:/work"`.
-- Set the working directory inside the container to `/work` using `-w /work`.
-- Remove the container after you exit using `--rm`.
-- Run interactively with a TTY using `-it`.
-
-Under the hood, each of these Docker flags configures the container runtime:
-
-1. `-v HOST_PATH:CONTAINER_PATH`: binds a host folder into the container filesystem.
-2. `-w WORKDIR`: defines the working directory inside the container.
-3. `--rm`: automatically removes the container when it stops.
-4. `-it`: allocates a pseudo-TTY and keeps STDIN open for interactive use.
-
-You can now develop within the container environment seamlessly.
-
-## Using Docker Compose
-
-To start an interactive shell using Docker Compose:
-
-```sh
-docker-compose run --rm dev
-```
-
-This will build the image if needed and launch a Zsh session inside the `dev` service container.
-
-## Rebuilding the Container
-
-### Docker
-
-```sh
-docker build -t devshell:dsc .
-```
-
-### Docker Compose
-
-```sh
-docker-compose build dev
-```
-
-### Docker (No Cache)
-
-```sh
-docker build --no-cache -t devshell:dsc .
-```
-
-### Docker Compose (No Cache)
-
-```sh
-docker-compose build --no-cache dev
+# Root user
+docker-compose -f "${HOME}/source/devshell-dsc/docker-compose.yml" run --rm --user root dev
 ```
