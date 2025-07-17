@@ -51,10 +51,10 @@ cd devshell-dsc
 
 ```bash
 # Standard user
-docker-compose -f "${HOME}/source/devshell-dsc/docker-compose.yml" run --rm dev
+docker compose -f "${HOME}/source/devshell-dsc/docker-compose.yml" run --rm dev
 
 # Root users
-docker-compose -f "${HOME}/source/devshell-dsc/docker-compose.yml" run --rm --user root dev
+docker compose -f "${HOME}/source/devshell-dsc/docker-compose.yml" run --rm --user root dev
 ```
 
 >[!IMPORTANT]
