@@ -7,7 +7,7 @@ Dockerized Ubuntu 24.04 dev environment with Zsh (Oh My Zsh & Powerlevel10k), Po
 - PowerShell 7.5.2 & DSC v3 support
 - .NET SDK 8.0
 - Git
-- Openssh Client
+- OpenSSH Client
 - Configured non-root 'developer' user with passwordless sudo
 - Zsh & Oh My Zsh with autosuggestions, syntax-highlighting, fast-syntax-highlighting & zsh-autocomplete, and Powerlevel10k theme with MesloLGS NF fonts
 - Health check via PowerShell
