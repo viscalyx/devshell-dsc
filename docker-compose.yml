@@ -3,7 +3,7 @@ services:
     build: .
     user: developer
     volumes:
-      - .:/home/developer/work
+      - "${PWD}:/home/developer/work"
     working_dir: /home/developer/work
     entrypoint: zsh
     stdin_open: true

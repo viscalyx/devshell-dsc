@@ -72,6 +72,8 @@ RUN mkdir -p /root/.ssh && chmod 700 /root/.ssh && \
     # Automatically cd into ~/source if it exists
     echo 'if [[ -d ~/source ]]; then' >> /root/.zshrc && \
     echo '  cd ~/source' >> /root/.zshrc && \
+    echo 'elif [[ -d ~/work ]]; then' >> /root/.zshrc && \
+    echo '  cd ~/work' >> /root/.zshrc && \
     echo 'fi' >> /root/.zshrc
 
 # ---- PowerShell: ensure latest patch & install DSC v3 -----------------------

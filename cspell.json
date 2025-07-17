@@ -4,13 +4,20 @@
   "ignoreWords": [
     "noninteractive",
     "chsh",
-    "PSDSC",
+    "psdsc",
     "dpkg",
     "elif",
     "devshell",
     "fontconfig",
     "powerline",
     "powerlevel",
-    "Meslo"
+    "meslo",
+    "passwordless",
+    "dockerized",
+    "dockerhub",
+    "buildx",
+    "viscalyx",
+    "viscalyxbot",
+    "buildcache"
   ]
 }
