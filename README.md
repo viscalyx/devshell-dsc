@@ -9,7 +9,7 @@ Dockerized Ubuntu 24.04 dev environment with Zsh (Oh My Zsh & Powerlevel10k), Po
 - Git
 - OpenSSH Client
 - Configured non-root 'developer' user with passwordless sudo
-- Zsh & Oh My Zsh with autosuggestions, syntax-highlighting, fast-syntax-highlighting & zsh-autocomplete, and Powerlevel10k theme with MesloLGS NF fonts
+- Zsh & Oh My Zsh
 - Health check via PowerShell
 
 ## Prerequisites
@@ -33,3 +33,6 @@ docker-compose -f "${HOME}/source/devshell-dsc/docker-compose.yml" run --rm dev
 # Root user
 docker-compose -f "${HOME}/source/devshell-dsc/docker-compose.yml" run --rm --user root dev
 ```
+
+>[!IMPORTANT]
+> Change the above path to where the repository was cloned.
