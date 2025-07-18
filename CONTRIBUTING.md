@@ -8,6 +8,29 @@ For any additional contributions, bug reports, or feature requests, please open 
 
 - Docker installed on your system.
 
+## Clone GitHub repository
+
+Clone the repository via SSH:
+
+```bash
+git clone git@github.com:viscalyx/devshell-dsc.git
+cd devshell-dsc
+```
+
+>[!NOTE]
+>The container will mount the directory you run this command from to `/home/developer/work`.
+
+```bash
+# Standard user
+docker compose -f "${HOME}/source/devshell-dsc/docker-compose.yml" run --rm dev
+
+# Root users
+docker compose -f "${HOME}/source/devshell-dsc/docker-compose.yml" run --rm --user root dev
+```
+
+>[!IMPORTANT]
+> Change the above path to where the repository was cloned.
+
 ## Running and Testing the DevShell Container
 
 To launch the development shell, run the following command in your terminal:

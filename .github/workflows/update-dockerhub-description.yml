@@ -1,0 +1,36 @@
+name: Update Docker Hub Description
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'README.md'
+
+jobs:
+  update-description:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install dependencies
+        run: |
+          sudo apt-get update && sudo apt-get install -y jq
+      - name: Update Docker Hub description
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+        run: |
+          # Obtain a JWT token from Docker Hub API
+          auth_response=$(curl -s -H "Content-Type: application/json" \
+            -X POST -d "{\"username\":\"$DOCKERHUB_USERNAME\",\"password\":\"$DOCKERHUB_TOKEN\"}" \
+            https://hub.docker.com/v2/users/login/)
+          token=$(echo "$auth_response" | jq -r .token)
+
+          # Escape and prepare README content
+          description=$(sed 's/"/\\"/g' README.md | awk '{printf "%s\\n", $0}')
+
+          # Update repository description on Docker Hub
+          curl -X PATCH "https://hub.docker.com/v2/repositories/viscalyx/devshell-dsc/" \
+            -H "Content-Type: application/json" \
+            -H "Authorization: JWT $token" \
+            -d "{\"full_description\": \"${description}\"}"
