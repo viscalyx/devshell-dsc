@@ -1,7 +1,4 @@
 name: Build Container
-permissions:
-  contents: read
-  secrets: read
 
 on:
   push:
@@ -14,6 +11,8 @@ jobs:
   build:
     name: Build Container
     runs-on: ubuntu-latest
+    env:
+      GH_READ_TOKEN: ${{ secrets.GH_READ_TOKEN }}
 
     steps:
       - name: Checkout code
@@ -26,7 +25,7 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       - name: Build Docker image (BuildKit)
-        if: ${{ secrets.GH_READ_TOKEN != '' }}
+        if: ${{ env.GH_READ_TOKEN != '' }}
         uses: docker/build-push-action@v6
         with:
           builder: ${{ steps.buildx.outputs.name }}
@@ -34,5 +33,5 @@ jobs:
           file: Dockerfile
           tags: devshell-dsc:${{ github.sha }}
           secrets: |
-            gh_read_token=${{ secrets.GH_READ_TOKEN }}
+            gh_read_token=${{ env.GH_READ_TOKEN }}
           push: false

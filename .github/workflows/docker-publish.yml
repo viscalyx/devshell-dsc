@@ -17,6 +17,8 @@ jobs:
   build-and-push:
     name: Publish Docker Images
     runs-on: ubuntu-latest
+    env:
+      GH_READ_TOKEN: ${{ secrets.GH_READ_TOKEN }}
 
     steps:
       - name: Checkout code
@@ -44,13 +46,13 @@ jobs:
           password: ${{ secrets.GHCR_TOKEN }}
 
       - name: Build and Push Tag Images
-        if: ${{ startsWith(github.ref, 'refs/tags/') && secrets.GH_READ_TOKEN != '' }}
+        if: ${{ startsWith(github.ref, 'refs/tags/') && env.GH_READ_TOKEN != '' }}
         uses: docker/build-push-action@v6
         with:
           builder: ${{ steps.buildx.outputs.name }}
           context: .
           secrets: |
-            gh_read_token=${{ secrets.GH_READ_TOKEN }}
+            gh_read_token=${{ env.GH_READ_TOKEN }}
           # If we use build cache we might not be able bump to latest version installed by Dockerfile when pushing a new tag
           # cache-from: "type=registry,ref=ghcr.io/viscalyx/devshell-dsc:buildcache"
           # cache-to: "type=registry,ref=ghcr.io/viscalyx/devshell-dsc:buildcache,mode=max"
@@ -64,13 +66,13 @@ jobs:
             ghcr.io/viscalyx/devshell-dsc:latest
 
       - name: Build and Push Branch Images
-        if: ${{ github.ref == 'refs/heads/main' && secrets.GH_READ_TOKEN != '' }}
+        if: ${{ github.ref == 'refs/heads/main' && env.GH_READ_TOKEN != '' }}
         uses: docker/build-push-action@v6
         with:
           builder: ${{ steps.buildx.outputs.name }}
           context: .
           secrets: |
-            gh_read_token=${{ secrets.GH_READ_TOKEN }}
+            gh_read_token=${{ env.GH_READ_TOKEN }}
           # If we use build cache we might not be able bump to latest version installed by Dockerfile when pushing a new tag
           # cache-from: "type=registry,ref=ghcr.io/viscalyx/devshell-dsc:buildcache"
           # cache-to: "type=registry,ref=ghcr.io/viscalyx/devshell-dsc:buildcache,mode=max"
