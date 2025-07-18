@@ -1,12 +1,17 @@
 name: Lint Dockerfile
 
 on:
+  push:
+    branches:
+      - '**'
   pull_request:
     types: [opened, synchronize, reopened]
 
 jobs:
   hadolint:
+    name: Lint Dockerfile
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
