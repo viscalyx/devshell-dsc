@@ -18,18 +18,18 @@ cd devshell-dsc
 ```
 
 >[!NOTE]
->The container will mount the directory you run this command from to `/home/developer/work`.
+>
 
 ```bash
 # Standard user
-docker compose -f "${HOME}/source/devshell-dsc/docker-compose.yml" run --rm dev
+docker compose run --rm dev
 
-# Root users
-docker compose -f "${HOME}/source/devshell-dsc/docker-compose.yml" run --rm --user root dev
+# Root user
+docker compose run --rm --user root dev
 ```
 
 >[!IMPORTANT]
-> Change the above path to where the repository was cloned.
+> To run from any directory, pass the path to the _docker-compose.yml_ where the repository was cloned, e.g. `-f "${HOME}/source/devshell-dsc/docker-compose.yml"`. The container will mount the directory you run this command from to `/home/developer/work`.
 
 ## Running and Testing the DevShell Container
 
