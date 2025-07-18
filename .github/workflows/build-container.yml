@@ -11,8 +11,6 @@ jobs:
   build:
     name: Build Container
     runs-on: ubuntu-latest
-    env:
-      GH_READ_TOKEN: ${{ secrets.GH_READ_TOKEN }}
 
     steps:
       - name: Checkout code
@@ -26,6 +24,8 @@ jobs:
 
       - name: Build Docker image (BuildKit)
         uses: docker/build-push-action@v6
+        env:
+          GH_READ_TOKEN: ${{ secrets.GH_READ_TOKEN }}
         with:
           builder: ${{ steps.buildx.outputs.name }}
           context: .
