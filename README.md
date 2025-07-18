@@ -16,8 +16,7 @@ Dockerized Ubuntu 24.04 dev environment with Zsh (Oh My Zsh & Powerlevel10k), Po
 
 Ensure the following are installed on your host system:
 
-- Docker (version >= 28.2)
-- Docker Compose (version >= 2.36)
+- Docker
 
 ## Quick Start
 
@@ -36,26 +35,3 @@ docker run --rm -it \
   -v "$(pwd)":/home/developer/work \
   viscalyx/devshell-dsc:latest
 ```
-
-## Clone GitHub repository
-
-Clone the repository via SSH:
-
-```bash
-git clone git@github.com:viscalyx/devshell-dsc.git
-cd devshell-dsc
-```
-
->[!NOTE]
->The container will mount the directory you run this command from to `/home/developer/work`.
-
-```bash
-# Standard user
-docker compose -f "${HOME}/source/devshell-dsc/docker-compose.yml" run --rm dev
-
-# Root users
-docker compose -f "${HOME}/source/devshell-dsc/docker-compose.yml" run --rm --user root dev
-```
-
->[!IMPORTANT]
-> Change the above path to where the repository was cloned.

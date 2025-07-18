@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:experimental
 # ---- Base image -------------------------------------------------------------
 FROM ubuntu:24.04
 SHELL ["/bin/bash", "-e", "-o", "pipefail", "-c"]
@@ -80,9 +81,9 @@ RUN mkdir -p /root/.ssh && chmod 700 /root/.ssh && \
     echo '  cd ~/work' >> /root/.zshrc && \
     echo 'fi' >> /root/.zshrc
 
-# ---- PowerShell: ensure latest patch & install DSC v3 -----------------------
-RUN pwsh -NoLogo -NoProfile -Command \
-    "\$ErrorActionPreference = 'Stop'; Install-PSResource 'PSDSC' -TrustRepository -Quiet -ErrorAction 'Stop'; Install-DscExe -IncludePrerelease -Force -ErrorAction 'Stop'"
+# ---- PowerShell: ensure latest patch & install DSC v3 using BuildKit secret ----
+# hadolint ignore=SC2154
+RUN --mount=type=secret,id=gh_read_token pwsh -NoLogo -NoProfile -Command "\$ErrorActionPreference='Stop'; Install-PSResource 'PSDSC' -TrustRepository -Quiet -ErrorAction 'Stop'; if(Test-Path '/run/secrets/gh_read_token'){ \$plainToken=(Get-Content '/run/secrets/gh_read_token' -Raw).Trim(); \$secureToken=ConvertTo-SecureString \$plainToken -AsPlainText -Force; Install-DscExe -IncludePrerelease -Force -ErrorAction 'Stop' -Token \$secureToken } else { Install-DscExe -IncludePrerelease -Force -ErrorAction 'Stop' }"
 
 # Switch back to dialog for any ad-hoc use of apt-get
 ENV DEBIAN_FRONTEND=dialog

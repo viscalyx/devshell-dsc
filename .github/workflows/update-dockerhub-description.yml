@@ -1,0 +1,47 @@
+name: Update Docker Hub Description
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'README.md'
+
+jobs:
+  update-description:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install jq
+        uses: dcarbone/install-jq-action@v2
+      - name: Update Docker Hub description
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+        run: |
+          # Guard if any of the curl/jq commands fail or a variable is unset so the whole step fail-fast
+          set -euo pipefail
+
+          # Obtain a JWT token from Docker Hub API
+          auth_response=$(curl -s -H "Content-Type: application/json" \
+            -X POST -d "{\"username\":\"$DOCKERHUB_USERNAME\",\"password\":\"$DOCKERHUB_TOKEN\"}" \
+            https://hub.docker.com/v2/users/login/)
+
+          # Extract the token from the response
+          token=$(echo "$auth_response" | jq -r .token)
+
+          # Fail fast if authentication failed
+          if [ -z "$token" ] || [ "$token" = "null" ]; then
+            echo "::error::Docker Hub authentication failed"
+            exit 1
+          fi
+
+          # Escape and prepare README content using jq
+          description=$(jq -Rs . README.md)
+
+          # Update repository description on Docker Hub
+          curl --fail --silent --show-error -X PATCH \
+            "https://hub.docker.com/v2/repositories/viscalyx/devshell-dsc/" \
+            -H "Content-Type: application/json" \
+            -H "Authorization: JWT $token" \
+            -d "{\"full_description\": ${description}}"

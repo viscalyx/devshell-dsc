@@ -1,0 +1,36 @@
+name: Build Container
+
+on:
+  push:
+    branches:
+      - 'main'
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  build:
+    name: Build Container
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image (BuildKit)
+        uses: docker/build-push-action@v6
+        env:
+          GH_READ_TOKEN: ${{ secrets.GH_READ_TOKEN }}
+        with:
+          builder: ${{ steps.buildx.outputs.name }}
+          context: .
+          file: Dockerfile
+          tags: devshell-dsc:${{ github.sha }}
+          # Only inject the secret when it exists – empty values are ignored
+          secrets: ${{ env.GH_READ_TOKEN && format('gh_read_token={0}', env.GH_READ_TOKEN) || '' }}
+          push: false

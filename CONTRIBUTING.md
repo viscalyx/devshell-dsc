@@ -6,7 +6,32 @@ For any additional contributions, bug reports, or feature requests, please open 
 
 ## Prerequisites
 
-- Docker installed on your system.
+- Docker (v28 or higher)
+- Docker Compose (v20 or higher)
+
+## Clone the GitHub repository
+
+Clone the repository via SSH:
+
+```bash
+git clone git@github.com:viscalyx/devshell-dsc.git
+cd devshell-dsc
+```
+
+The commands below start the DevShell container in your _devshell-dsc_ project directory.
+
+```bash
+# Standard user
+docker compose run --rm dev
+
+# Root user
+docker compose run --rm --user root dev
+```
+
+>[!IMPORTANT]
+> If you want to start the container from any directory, pass the path to the repository’s `docker-compose.yml`, e.g.
+> `-f "${HOME}/source/devshell-dsc/docker-compose.yml"`.
+> The container mounts the directory you run the command from to `/home/developer/work`.
 
 ## Running and Testing the DevShell Container
 
@@ -30,10 +55,13 @@ docker compose run --rm dev
 
 ## Rebuilding the Container
 
+> [!IMPORTANT]
+> To securely inject secrets (e.g., GitHub tokens) without baking them into image layers or build history, enable BuildKit on every build. Do not use _Docker Compose_ v1 (`docker-compose`) because it does not support the secure arguments. Always use _Docker Compose_ v2 (`docker compose`).
+
 ### Docker
 
 ```sh
-docker build -t devshell:dsc .
+DOCKER_BUILDKIT=1 docker build -t devshell:dsc .
 ```
 
 ### Docker Compose
@@ -45,7 +73,7 @@ docker compose build dev
 ### Docker (No Cache)
 
 ```sh
-docker build --no-cache -t devshell:dsc .
+DOCKER_BUILDKIT=1 docker build --no-cache -t devshell:dsc .
 ```
 
 ### Docker Compose (No Cache)
@@ -130,3 +158,16 @@ curl -X PUT \
 ```sh
 gh api -X PUT /user/packages/container/devshell-dsc/visibility -F visibility=public
 ```
+
+## Required Token Environment Variables
+
+The following environment variables are required for CI/CD workflows and publishing tasks:
+
+| Environment Variable | Description | Minimum Required Permissions |
+|----------------------|-------------|------------------------------|
+| `DOCKERHUB_TOKEN`   | Docker Hub personal access token used for authenticating with Docker Hub (login and updating description). | Write (push), Delete package versions (optional) |
+| `GHCR_TOKEN`        | GitHub Container Registry token used for authenticating with ghcr.io (login and image push). | packages: write (and read), Delete package versions (optional) |
+| `GH_READ_TOKEN`     | GitHub token used as to build container in GitHub Actions to read GitHUB API for `Install-DscExe` | public read-only |
+| `GITHUB_TOKEN`      | Automatic GitHub Actions token used for API calls (e.g., changing GHCR package visibility). | contents: read, packages: write |
+| `DOCKERHUB_USERNAME` | Docker Hub username used for authenticating with Docker Hub (login and updating description). | N/A |
+| `GHCR_USERNAME`      | GitHub Container Registry username used for authenticating with ghcr.io (login and image push). | N/A |
