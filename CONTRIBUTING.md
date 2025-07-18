@@ -6,7 +6,8 @@ For any additional contributions, bug reports, or feature requests, please open 
 
 ## Prerequisites
 
-- Docker installed on your system.
+- Docker
+- Docker Compose
 
 ## Clone the GitHub repository
 
