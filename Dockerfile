@@ -37,7 +37,7 @@ RUN ARCH=$(dpkg --print-architecture) && \
 
 # ---- Verify & keep image slim ----------------------------------------------
 # shellcheck disable=SC2154
-RUN zsh --version && pwsh -NoLogo -Command '$PSVersionTable'
+RUN zsh --version && pwsh -NoLogo -Command "$PSVersionTable"
 
 # ---- Opinionated Oh My Zsh (unattended) ------------------------------------
 RUN sh -c "$(wget --progress=dot:giga -O- https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" --unattended && \
@@ -100,7 +100,7 @@ RUN cp -R /root/.oh-my-zsh /home/developer/ && \
     cp /root/.zshrc /home/developer/.zshrc && \
     cp /root/.p10k.zsh /home/developer/.p10k.zsh && \
     touch /home/developer/.zprofile /home/developer/.zshenv /home/developer/.zlogin && \
-    sed -i 's|^export ZSH=.*|export ZSH="$HOME/.oh-my-zsh"|' /home/developer/.zshrc && \
+    sed -i "s|^export ZSH=.*|export ZSH=\"\$HOME/.oh-my-zsh\"|" /home/developer/.zshrc && \
     chown -R developer:developer /home/developer && \
     mkdir -p /home/developer/.ssh && chmod 700 /home/developer/.ssh && chown developer:developer /home/developer/.ssh
 
@@ -108,7 +108,7 @@ USER developer
 WORKDIR /home/developer
 
 # ---- Healthcheck -----------------------------------------------------------
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 CMD pwsh -NoLogo -Command '$PSVersionTable | Out-Null || exit 1'
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 CMD pwsh -NoLogo -Command "$PSVersionTable | Out-Null || exit 1"
 
 # ---- Default shell ----------------------------------------------------------
 CMD ["zsh"]
