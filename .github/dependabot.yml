@@ -3,13 +3,10 @@ version: 2
 updates:
   - package-ecosystem: "github-actions"
     # Location of workflow files
-    directory: "/"
+    directory: "/.github/workflows"
     schedule:
       # Options: "daily", "weekly", "monthly"
       interval: "daily"
       # Optional: specify time in UTC (e.g., "02:00")
       time: "02:00"
-    # Optional: allow only security updates (default is all updates)
-    #open-pull-requests-limit: 5
-    #allow:
-    #  - dependency-type: "all"
+
