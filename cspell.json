@@ -18,6 +18,8 @@
     "buildx",
     "viscalyx",
     "viscalyxbot",
-    "buildcache"
+    "buildcache",
+    "giga",
+    "NOPASSWD"
   ]
 }
