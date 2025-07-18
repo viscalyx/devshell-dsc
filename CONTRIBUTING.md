@@ -55,10 +55,13 @@ docker compose run --rm dev
 
 ## Rebuilding the Container
 
+> [!IMPORTANT]
+> To securely inject secrets (e.g., GitHub tokens) without baking them into image layers or build history, enable BuildKit on every build. Do not use v1 of Docker Compose (`docker-compose`command) as does not support the secure arguments, always use v2 of Docker Compose (`docker compose`command).
+
 ### Docker
 
 ```sh
-docker build -t devshell:dsc .
+DOCKER_BUILDKIT=1 docker build -t devshell:dsc .
 ```
 
 ### Docker Compose
@@ -70,7 +73,7 @@ docker compose build dev
 ### Docker (No Cache)
 
 ```sh
-docker build --no-cache -t devshell:dsc .
+DOCKER_BUILDKIT=1 docker build --no-cache -t devshell:dsc .
 ```
 
 ### Docker Compose (No Cache)
