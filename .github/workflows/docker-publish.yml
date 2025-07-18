@@ -2,6 +2,8 @@ name: Publish Docker Images
 
 on:
   push:
+    branches:
+      - main
     tags:
       - 'v*.*.*'
   workflow_dispatch:
@@ -39,7 +41,8 @@ jobs:
           username: ${{ secrets.GHCR_USERNAME }}
           password: ${{ secrets.GHCR_TOKEN }}
 
-      - name: Build and Push Images
+      - name: Build and Push Tag Images
+        if: startsWith(github.ref, 'refs/tags/')
         uses: docker/build-push-action@v5
         with:
           builder: ${{ steps.buildx.outputs.name }}
@@ -55,3 +58,19 @@ jobs:
             docker.io/viscalyx/devshell-dsc:latest
             ghcr.io/viscalyx/devshell-dsc:${{ github.ref_name }}
             ghcr.io/viscalyx/devshell-dsc:latest
+
+      - name: Build and Push Branch Images
+        if: github.ref == 'refs/heads/main'
+        uses: docker/build-push-action@v5
+        with:
+          builder: ${{ steps.buildx.outputs.name }}
+          context: .
+          # If we use build cache we might not be able bump to latest version installed by Dockerfile when pushing a new tag
+          # cache-from: "type=registry,ref=ghcr.io/viscalyx/devshell-dsc:buildcache"
+          # cache-to: "type=registry,ref=ghcr.io/viscalyx/devshell-dsc:buildcache,mode=max"
+          platforms: linux/amd64,linux/arm64
+          push: true
+          provenance: true
+          tags: |
+            docker.io/viscalyx/devshell-dsc:${{ github.ref_name }}
+            ghcr.io/viscalyx/devshell-dsc:${{ github.ref_name }}
