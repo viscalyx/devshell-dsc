@@ -1,6 +1,6 @@
 # ---- Base image -------------------------------------------------------------
 FROM ubuntu:24.04
-SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+SHELL ["/bin/bash", "-e", "-o", "pipefail", "-c"]
 
 ENV POWERSHELL_VERSION=7.5.2
 ENV POWERSHELL_PACKAGE_REVISION=1
@@ -48,8 +48,9 @@ RUN sh -c "$(wget --progress=dot:giga -O- https://raw.githubusercontent.com/ohmy
     git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "${ZSH_CUSTOM:-/root/.oh-my-zsh/custom}/themes/powerlevel10k" && \
     # Install Powerlevel10k MesloLGS NF fonts
     for variant in Regular Bold Italic "Bold Italic"; do \
+      encoded=${variant// /%20}; \
       wget --progress=dot:giga -O "/tmp/MesloLGS_NF_${variant// /_}.ttf" \
-        "https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20${variant// /%20}.ttf"; \
+        "https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20${encoded}.ttf"; \
     done && \
     mkdir -p /usr/share/fonts/truetype/powerlevel10k && \
     mv /tmp/*.ttf /usr/share/fonts/truetype/powerlevel10k/ && \
