@@ -43,7 +43,7 @@ jobs:
           password: ${{ secrets.GHCR_TOKEN }}
 
       - name: Build and Push Tag Images
-        if: startsWith(github.ref, 'refs/tags/')
+        if: startsWith(github.ref, 'refs/tags/') && secrets.GH_READ_TOKEN != ''
         uses: docker/build-push-action@v5
         with:
           builder: ${{ steps.buildx.outputs.name }}
@@ -63,7 +63,7 @@ jobs:
             ghcr.io/viscalyx/devshell-dsc:latest
 
       - name: Build and Push Branch Images
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main' && secrets.GH_READ_TOKEN != ''
         uses: docker/build-push-action@v5
         with:
           builder: ${{ steps.buildx.outputs.name }}
