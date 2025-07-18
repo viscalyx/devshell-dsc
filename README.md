@@ -17,7 +17,6 @@ Dockerized Ubuntu 24.04 dev environment with Zsh (Oh My Zsh & Powerlevel10k), Po
 Ensure the following are installed on your host system:
 
 - Docker
-- Docker Compose
 
 ## Quick Start
 
