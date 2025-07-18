@@ -16,9 +16,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Build Docker image
-        run: |
-          docker build \
-            --file Dockerfile \
-            --tag devshell-dsc:${{ github.sha }} \
-            .
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image (BuildKit)
+        uses: docker/build-push-action@v5
+        with:
+          builder: ${{ steps.buildx.outputs.name }}
+          context: .
+          file: Dockerfile
+          tags: devshell-dsc:${{ github.sha }}
+          secrets: |
+            gh_read_token=${{ secrets.GH_READ_TOKEN }}
+          push: false
