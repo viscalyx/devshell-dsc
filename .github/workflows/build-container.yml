@@ -23,7 +23,7 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       - name: Build Docker image (BuildKit)
-        if: ${{ secrets.GH_READ_TOKEN != '' }}
+        if: secrets.GH_READ_TOKEN != ''
         uses: docker/build-push-action@v6
         with:
           builder: ${{ steps.buildx.outputs.name }}
