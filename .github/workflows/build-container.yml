@@ -1,0 +1,24 @@
+name: Build Container
+
+on:
+  push:
+    branches:
+      - '**'
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  build:
+    name: Build Docker Image
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Build Docker image
+        run: |
+          docker build \
+            --file Dockerfile \
+            --tag devshell-dsc:pr-${{ github.event.pull_request.number }} \
+            .
