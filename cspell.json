@@ -20,6 +20,7 @@
     "viscalyxbot",
     "buildcache",
     "giga",
-    "NOPASSWD"
+    "NOPASSWD",
+    "pipefail"
   ]
 }
