@@ -17,8 +17,7 @@ git clone git@github.com:viscalyx/devshell-dsc.git
 cd devshell-dsc
 ```
 
->[!NOTE]
->
+The commands below start the DevShell container in your _devshell-dsc_ project directory.
 
 ```bash
 # Standard user
