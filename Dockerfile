@@ -40,7 +40,6 @@ RUN ARCH=$(dpkg --print-architecture) && \
  RUN zsh --version && pwsh -NoLogo -Command "\$PSVersionTable"
 
 # ---- Opinionated Oh My Zsh (unattended) ------------------------------------
-# shellcheck disable=SC2016
 RUN sh -c "$(wget --progress=dot:giga -O- https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" --unattended && \
     git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-/root/.oh-my-zsh/custom}/plugins/zsh-autosuggestions && \
     git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting ${ZSH_CUSTOM:-/root/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting && \
@@ -54,8 +53,9 @@ RUN sh -c "$(wget --progress=dot:giga -O- https://raw.githubusercontent.com/ohmy
     wget --progress=dot:giga -O /tmp/MesloLGS_NF_Bold_Italic.ttf https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf && \
     mkdir -p /usr/share/fonts/truetype/powerlevel10k && \
     mv /tmp/*.ttf /usr/share/fonts/truetype/powerlevel10k/ && \
-    fc-cache -fv && \
-    chsh -s /usr/bin/zsh root && \
+    fc-cache -fv
+
+RUN chsh -s /usr/bin/zsh root && \
     # configure default theme and plugins for root
     sed -i 's|^ZSH_THEME=.*|ZSH_THEME="powerlevel10k/powerlevel10k"|' /root/.zshrc && \
     sed -i 's|^plugins=.*|plugins=(git ssh-agent zsh-autosuggestions zsh-syntax-highlighting fast-syntax-highlighting zsh-autocomplete)|' /root/.zshrc && \
