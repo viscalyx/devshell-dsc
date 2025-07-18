@@ -8,7 +8,7 @@ For any additional contributions, bug reports, or feature requests, please open 
 
 - Docker installed on your system.
 
-## Clone GitHub repository
+## Clone the GitHub repository
 
 Clone the repository via SSH:
 
@@ -28,7 +28,9 @@ docker compose run --rm --user root dev
 ```
 
 >[!IMPORTANT]
-> To run from any directory, pass the path to the _docker-compose.yml_ where the repository was cloned, e.g. `-f "${HOME}/source/devshell-dsc/docker-compose.yml"`. The container will mount the directory you run this command from to `/home/developer/work`.
+> If you want to start the container from any directory, pass the path to the repository’s `docker-compose.yml`, e.g.
+> `-f "${HOME}/source/devshell-dsc/docker-compose.yml"`.
+> The container mounts the directory you run the command from to `/home/developer/work`.
 
 ## Running and Testing the DevShell Container
 
