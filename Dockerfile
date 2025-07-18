@@ -17,14 +17,14 @@ RUN apt-get update && \
 RUN ARCH=$(dpkg --print-architecture) && \
     if [ "$ARCH" = "amd64" ]; then \
         echo "Installing .deb package for AMD64" && \
-        wget https://github.com/PowerShell/PowerShell/releases/download/v${POWERSHELL_VERSION}/powershell_${POWERSHELL_VERSION}-${POWERSHELL_PACKAGE_REVISION}.deb_amd64.deb -O powershell.deb && \
+        wget --progress=dot:giga https://github.com/PowerShell/PowerShell/releases/download/v${POWERSHELL_VERSION}/powershell_${POWERSHELL_VERSION}-${POWERSHELL_PACKAGE_REVISION}.deb_amd64.deb -O powershell.deb && \
         dpkg -i powershell.deb && \
         rm powershell.deb && \
         apt-get update && apt-get install -f -y && \
         apt-get clean && rm -rf /var/lib/apt/lists/*; \
     elif [ "$ARCH" = "arm64" ]; then \
         echo "Installing tar.gz package for ARM64" && \
-        wget https://github.com/PowerShell/PowerShell/releases/download/v${POWERSHELL_VERSION}/powershell-${POWERSHELL_VERSION}-linux-arm64.tar.gz -O powershell.tar.gz && \
+        wget --progress=dot:giga https://github.com/PowerShell/PowerShell/releases/download/v${POWERSHELL_VERSION}/powershell-${POWERSHELL_VERSION}-linux-arm64.tar.gz -O powershell.tar.gz && \
         mkdir -p /opt/powershell && \
         tar -xzf powershell.tar.gz -C /opt/powershell && chmod +x /opt/powershell/pwsh && \
         ln -s /opt/powershell/pwsh /usr/bin/pwsh && \
@@ -37,17 +37,17 @@ RUN ARCH=$(dpkg --print-architecture) && \
 RUN zsh --version && pwsh -NoLogo -Command '$PSVersionTable'
 
 # ---- Opinionated Oh My Zsh (unattended) ------------------------------------
-RUN sh -c "$(wget -O- https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" --unattended && \
+RUN sh -c "$(wget --progress=dot:giga -O- https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" --unattended && \
     git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-/root/.oh-my-zsh/custom}/plugins/zsh-autosuggestions && \
     git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting ${ZSH_CUSTOM:-/root/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting && \
     git clone --depth=1 https://github.com/zdharma-continuum/fast-syntax-highlighting ${ZSH_CUSTOM:-/root/.oh-my-zsh/custom}/plugins/fast-syntax-highlighting && \
     git clone --depth=1 https://github.com/marlonrichert/zsh-autocomplete ${ZSH_CUSTOM:-/root/.oh-my-zsh/custom}/plugins/zsh-autocomplete && \
     git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-/root/.oh-my-zsh/custom}/themes/powerlevel10k && \
     # Install Powerlevel10k MesloLGS NF fonts
-    wget -O /tmp/MesloLGS_NF_Regular.ttf https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf && \
-    wget -O /tmp/MesloLGS_NF_Bold.ttf https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold.ttf && \
-    wget -O /tmp/MesloLGS_NF_Italic.ttf https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf && \
-    wget -O /tmp/MesloLGS_NF_Bold_Italic.ttf https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf && \
+    wget --progress=dot:giga -O /tmp/MesloLGS_NF_Regular.ttf https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf && \
+    wget --progress=dot:giga -O /tmp/MesloLGS_NF_Bold.ttf https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold.ttf && \
+    wget --progress=dot:giga -O /tmp/MesloLGS_NF_Italic.ttf https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf && \
+    wget --progress=dot:giga -O /tmp/MesloLGS_NF_Bold_Italic.ttf https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf && \
     mkdir -p /usr/share/fonts/truetype/powerlevel10k && \
     mv /tmp/*.ttf /usr/share/fonts/truetype/powerlevel10k/ && \
     fc-cache -fv && \
