@@ -34,7 +34,7 @@ RUN ARCH=$(dpkg --print-architecture) && \
     fi
 
 # ---- Verify & keep image slim ----------------------------------------------
-RUN zsh --version && pwsh -NoLogo -Command '$PSVersionTable'
+RUN zsh --version && pwsh -NoLogo -Command "$PSVersionTable"
 
 # ---- Opinionated Oh My Zsh (unattended) ------------------------------------
 RUN sh -c "$(wget --progress=dot:giga -O- https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" --unattended && \
