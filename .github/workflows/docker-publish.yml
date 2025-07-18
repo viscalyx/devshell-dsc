@@ -44,8 +44,9 @@ jobs:
         with:
           builder: ${{ steps.buildx.outputs.name }}
           context: .
-          cache-from: "type=registry,ref=ghcr.io/viscalyx/devshell-dsc:buildcache"
-          cache-to: "type=registry,ref=ghcr.io/viscalyx/devshell-dsc:buildcache,mode=max"
+          # If we use build cache we might not be able bump to latest version installed by Dockerfile when pushing a new tag
+          # cache-from: "type=registry,ref=ghcr.io/viscalyx/devshell-dsc:buildcache"
+          # cache-to: "type=registry,ref=ghcr.io/viscalyx/devshell-dsc:buildcache,mode=max"
           platforms: linux/amd64,linux/arm64
           push: true
           provenance: true
