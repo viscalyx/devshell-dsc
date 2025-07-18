@@ -37,7 +37,7 @@ RUN ARCH=$(dpkg --print-architecture) && \
 
 # ---- Verify & keep image slim ----------------------------------------------
 # shellcheck disable=SC2154
-RUN zsh --version && pwsh -NoLogo -Command "$PSVersionTable"
+ RUN zsh --version && pwsh -NoLogo -Command "\$PSVersionTable"
 
 # ---- Opinionated Oh My Zsh (unattended) ------------------------------------
 RUN sh -c "$(wget --progress=dot:giga -O- https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" --unattended && \
@@ -108,7 +108,7 @@ USER developer
 WORKDIR /home/developer
 
 # ---- Healthcheck -----------------------------------------------------------
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 CMD pwsh -NoLogo -Command "$PSVersionTable | Out-Null || exit 1"
+ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 CMD pwsh -NoLogo -Command "\$PSVersionTable | Out-Null || exit 1"
 
 # ---- Default shell ----------------------------------------------------------
 CMD ["zsh"]
