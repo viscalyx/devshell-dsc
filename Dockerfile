@@ -55,19 +55,18 @@ RUN sh -c "$(wget --progress=dot:giga -O- https://raw.githubusercontent.com/ohmy
     mv /tmp/*.ttf /usr/share/fonts/truetype/powerlevel10k/ && \
     fc-cache -fv
 
+# Add custom Powerlevel10k config
+COPY .pk10k.zsh /root/.p10k.zsh
+
+COPY instant-prompt.zsh /root/instant-prompt.zsh
+
 RUN chsh -s /usr/bin/zsh root && \
     # configure default theme and plugins for root
     sed -i 's|^ZSH_THEME=.*|ZSH_THEME="powerlevel10k/powerlevel10k"|' /root/.zshrc && \
     sed -i 's|^plugins=.*|plugins=(git ssh-agent zsh-autosuggestions zsh-syntax-highlighting fast-syntax-highlighting zsh-autocomplete)|' /root/.zshrc && \
     echo '[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh' >> /root/.zshrc && \
-    # Prepend Powerlevel10k instant prompt block to root .zshrc
-    printf '%s\n' \
-    '# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.' \
-    '# Initialization code that may require console input (password prompts, [y/n]' \
-    '# confirmations, etc.) must go above this block; everything else may go below.' \
-    'if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then' \
-    '  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"' \
-    'fi' | cat - /root/.zshrc > /root/.zshrc.tmp && mv /root/.zshrc.tmp /root/.zshrc
+    # Prepend Powerlevel10k instant prompt block to root .zshrc using project file
+    cat /root/instant-prompt.zsh /root/.zshrc > /root/.zshrc.tmp && mv /root/.zshrc.tmp /root/.zshrc
 
 RUN mkdir -p /root/.ssh && chmod 700 /root/.ssh && \
     echo 'export EDITOR=vim' >> /root/.zshrc && \
@@ -86,9 +85,6 @@ RUN pwsh -NoLogo -NoProfile -Command \
 
 # Switch back to dialog for any ad-hoc use of apt-get
 ENV DEBIAN_FRONTEND=dialog
-
-# Add custom Powerlevel10k config
-COPY .pk10k.zsh /root/.p10k.zsh
 
 # ---- Create non-root user 'developer' with sudo privileges ----
 RUN useradd -ms /usr/bin/zsh developer && \
