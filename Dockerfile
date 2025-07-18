@@ -1,11 +1,13 @@
 # ---- Base image -------------------------------------------------------------
 FROM ubuntu:24.04
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 ENV POWERSHELL_VERSION=7.5.2
 ENV POWERSHELL_PACKAGE_REVISION=1
 ENV DEBIAN_FRONTEND=noninteractive
 
-# ---- Non‑interactive apt install -------------------------------------------
+# ---- Non-interactive apt install -------------------------------------------
+# hadolint ignore=DL3008
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         zsh git curl wget ca-certificates locales lsb-release fontconfig dotnet-sdk-8.0 sudo vim \
@@ -20,7 +22,7 @@ RUN ARCH=$(dpkg --print-architecture) && \
         wget --progress=dot:giga https://github.com/PowerShell/PowerShell/releases/download/v${POWERSHELL_VERSION}/powershell_${POWERSHELL_VERSION}-${POWERSHELL_PACKAGE_REVISION}.deb_amd64.deb -O powershell.deb && \
         dpkg -i powershell.deb && \
         rm powershell.deb && \
-        apt-get update && apt-get install -f -y && \
+        apt-get update && apt-get install -f -y --no-install-recommends && \
         apt-get clean && rm -rf /var/lib/apt/lists/*; \
     elif [ "$ARCH" = "arm64" ]; then \
         echo "Installing tar.gz package for ARM64" && \
