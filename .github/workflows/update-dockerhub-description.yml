@@ -23,13 +23,21 @@ jobs:
           auth_response=$(curl -s -H "Content-Type: application/json" \
             -X POST -d "{\"username\":\"$DOCKERHUB_USERNAME\",\"password\":\"$DOCKERHUB_TOKEN\"}" \
             https://hub.docker.com/v2/users/login/)
+
+          # Extract the token from the response
           token=$(echo "$auth_response" | jq -r .token)
 
-          # Escape and prepare README content
-          description=$(sed 's/"/\\"/g' README.md | awk '{printf "%s\\n", $0}')
+          # Fail fast if authentication failed
+          if [ -z "$token" ] || [ "$token" = "null" ]; then
+            echo "::error::Docker Hub authentication failed"
+            exit 1
+          fi
+
+          # Escape and prepare README content using jq
+          description=$(jq -Rs . README.md)
 
           # Update repository description on Docker Hub
           curl -X PATCH "https://hub.docker.com/v2/repositories/viscalyx/devshell-dsc/" \
             -H "Content-Type: application/json" \
             -H "Authorization: JWT $token" \
-            -d "{\"full_description\": \"${description}\"}"
+            -d "{\"full_description\": ${description}}"
