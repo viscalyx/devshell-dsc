@@ -21,6 +21,7 @@
     "buildcache",
     "giga",
     "NOPASSWD",
-    "pipefail"
+    "pipefail",
+    "shellcheck"
   ]
 }
