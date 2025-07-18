@@ -25,13 +25,12 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       - name: Build Docker image (BuildKit)
-        if: ${{ env.GH_READ_TOKEN != '' }}
         uses: docker/build-push-action@v6
         with:
           builder: ${{ steps.buildx.outputs.name }}
           context: .
           file: Dockerfile
           tags: devshell-dsc:${{ github.sha }}
-          secrets: |
-            gh_read_token=${{ env.GH_READ_TOKEN }}
+          # Only inject the secret when it exists – empty values are ignored
+          secrets: ${{ env.GH_READ_TOKEN && format('gh_read_token={0}', env.GH_READ_TOKEN) || '' }}
           push: false
