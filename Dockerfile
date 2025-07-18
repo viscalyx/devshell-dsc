@@ -46,11 +46,11 @@ RUN sh -c "$(wget --progress=dot:giga -O- https://raw.githubusercontent.com/ohmy
     git clone --depth=1 https://github.com/zdharma-continuum/fast-syntax-highlighting "${ZSH_CUSTOM:-/root/.oh-my-zsh/custom}/plugins/fast-syntax-highlighting" && \
     git clone --depth=1 https://github.com/marlonrichert/zsh-autocomplete "${ZSH_CUSTOM:-/root/.oh-my-zsh/custom}/plugins/zsh-autocomplete" && \
     git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "${ZSH_CUSTOM:-/root/.oh-my-zsh/custom}/themes/powerlevel10k" && \
-        # Install Powerlevel10k MesloLGS NF fonts
-    wget --progress=dot:giga -O /tmp/MesloLGS_NF_Regular.ttf https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf && \
-    wget --progress=dot:giga -O /tmp/MesloLGS_NF_Bold.ttf https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold.ttf && \
-    wget --progress=dot:giga -O /tmp/MesloLGS_NF_Italic.ttf https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf && \
-    wget --progress=dot:giga -O /tmp/MesloLGS_NF_Bold_Italic.ttf https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf && \
+    # Install Powerlevel10k MesloLGS NF fonts
+    for variant in Regular Bold Italic "Bold Italic"; do \
+      wget --progress=dot:giga -O "/tmp/MesloLGS_NF_${variant// /_}.ttf" \
+        "https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20${variant// /%20}.ttf"; \
+    done && \
     mkdir -p /usr/share/fonts/truetype/powerlevel10k && \
     mv /tmp/*.ttf /usr/share/fonts/truetype/powerlevel10k/ && \
     fc-cache -fv
