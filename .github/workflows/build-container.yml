@@ -3,7 +3,7 @@ name: Build Container
 on:
   push:
     branches:
-      - '**'
+      - 'main'
   pull_request:
     types: [opened, synchronize, reopened]
 
@@ -20,5 +20,5 @@ jobs:
         run: |
           docker build \
             --file Dockerfile \
-            --tag devshell-dsc:pr-${{ github.event.pull_request.number }} \
+            --tag devshell-dsc:${{ github.sha }} \
             .
