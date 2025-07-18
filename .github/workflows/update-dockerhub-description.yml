@@ -19,6 +19,9 @@ jobs:
           DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
           DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
         run: |
+          # Guard if any of the curl/jq commands fail or a variable is unset so the whole step fail-fast
+          set -euo pipefail
+
           # Obtain a JWT token from Docker Hub API
           auth_response=$(curl -s -H "Content-Type: application/json" \
             -X POST -d "{\"username\":\"$DOCKERHUB_USERNAME\",\"password\":\"$DOCKERHUB_TOKEN\"}" \
@@ -37,7 +40,8 @@ jobs:
           description=$(jq -Rs . README.md)
 
           # Update repository description on Docker Hub
-          curl -X PATCH "https://hub.docker.com/v2/repositories/viscalyx/devshell-dsc/" \
+          curl --fail --silent --show-error -X PATCH \
+            "https://hub.docker.com/v2/repositories/viscalyx/devshell-dsc/" \
             -H "Content-Type: application/json" \
             -H "Authorization: JWT $token" \
             -d "{\"full_description\": ${description}}"
