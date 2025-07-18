@@ -40,6 +40,7 @@ RUN ARCH=$(dpkg --print-architecture) && \
  RUN zsh --version && pwsh -NoLogo -Command "\$PSVersionTable"
 
 # ---- Opinionated Oh My Zsh (unattended) ------------------------------------
+# shellcheck disable=SC2016
 RUN sh -c "$(wget --progress=dot:giga -O- https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" --unattended && \
     git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-/root/.oh-my-zsh/custom}/plugins/zsh-autosuggestions && \
     git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting ${ZSH_CUSTOM:-/root/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting && \
