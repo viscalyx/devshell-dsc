@@ -12,6 +12,6 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Lint Dockerfile
-        uses: hadolint/hadolint-action@v2
+        uses: hadolint/hadolint-action@v3
         with:
           dockerfile: Dockerfile
