@@ -20,7 +20,7 @@
     "viscalyxbot",
     "buildcache",
     "giga",
-    "NOPASSWD",
+    "nopasswd",
     "pipefail",
     "shellcheck"
   ]
