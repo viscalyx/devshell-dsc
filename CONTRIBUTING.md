@@ -6,8 +6,8 @@ For any additional contributions, bug reports, or feature requests, please open 
 
 ## Prerequisites
 
-- Docker
-- Docker Compose
+- Docker (v28 or higher)
+- Docker Compose (v20 or higher)
 
 ## Clone the GitHub repository
 
