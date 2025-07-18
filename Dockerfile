@@ -82,8 +82,8 @@ RUN mkdir -p /root/.ssh && chmod 700 /root/.ssh && \
     echo 'fi' >> /root/.zshrc
 
 # ---- PowerShell: ensure latest patch & install DSC v3 using BuildKit secret ----
-RUN --mount=type=secret,id=gh_read_token \
-    pwsh -NoLogo -NoProfile -Command "\$ErrorActionPreference='Stop'; Install-PSResource 'PSDSC' -TrustRepository -Quiet -ErrorAction 'Stop'; if(Test-Path '/run/secrets/gh_read_token'){ \$token=Get-Content '/run/secrets/gh_read_token' -Raw; Install-DscExe -IncludePrerelease -Force -ErrorAction 'Stop' -Token $token } else { Install-DscExe -IncludePrerelease -Force -ErrorAction 'Stop' }"
+# hadolint ignore=SC2154
+RUN --mount=type=secret,id=gh_read_token pwsh -NoLogo -NoProfile -Command "\$ErrorActionPreference='Stop'; Install-PSResource 'PSDSC' -TrustRepository -Quiet -ErrorAction 'Stop'; if(Test-Path '/run/secrets/gh_read_token'){ \$token=Get-Content '/run/secrets/gh_read_token' -Raw; Install-DscExe -IncludePrerelease -Force -ErrorAction 'Stop' -Token \$token } else { Install-DscExe -IncludePrerelease -Force -ErrorAction 'Stop' }"
 
 # Switch back to dialog for any ad-hoc use of apt-get
 ENV DEBIAN_FRONTEND=dialog
