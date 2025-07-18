@@ -158,3 +158,16 @@ curl -X PUT \
 ```sh
 gh api -X PUT /user/packages/container/devshell-dsc/visibility -F visibility=public
 ```
+
+## Required Token Environment Variables
+
+The following environment variables are required for CI/CD workflows and publishing tasks:
+
+| Environment Variable | Description | Minimum Required Permissions |
+|----------------------|-------------|------------------------------|
+| `DOCKERHUB_TOKEN`   | Docker Hub personal access token used for authenticating with Docker Hub (login and updating description). | Write (push), Delete package versions (optional) |
+| `GHCR_TOKEN`        | GitHub Container Registry token used for authenticating with ghcr.io (login and image push). | packages: write (and read), Delete package versions (optional) |
+| `GH_READ_TOKEN`     | GitHub token used as to build container in GitHub Actions to read GitHUB API for `Install-DscExe` | public read-only |
+| `GITHUB_TOKEN`      | Automatic GitHub Actions token used for API calls (e.g., changing GHCR package visibility). | contents: read, packages: write |
+| `DOCKERHUB_USERNAME` | Docker Hub username used for authenticating with Docker Hub (login and updating description). | N/A |
+| `GHCR_USERNAME`      | GitHub Container Registry username used for authenticating with ghcr.io (login and image push). | N/A |
