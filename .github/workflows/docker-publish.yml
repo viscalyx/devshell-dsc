@@ -51,7 +51,7 @@ jobs:
           builder: ${{ steps.buildx.outputs.name }}
           context: .
           secrets: |
-            gh_read_token=${{ env.GH_READ_TOKEN }}
+            gh_read_token=${{ secrets.GH_READ_TOKEN }}
           # If we use build cache we might not be able bump to latest version installed by Dockerfile when pushing a new tag
           # cache-from: "type=registry,ref=ghcr.io/viscalyx/devshell-dsc:buildcache"
           # cache-to: "type=registry,ref=ghcr.io/viscalyx/devshell-dsc:buildcache,mode=max"
@@ -71,7 +71,7 @@ jobs:
           builder: ${{ steps.buildx.outputs.name }}
           context: .
           secrets: |
-            gh_read_token=${{ env.GH_READ_TOKEN }}
+            gh_read_token=${{ secrets.GH_READ_TOKEN }}
           # If we use build cache we might not be able bump to latest version installed by Dockerfile when pushing a new tag
           # cache-from: "type=registry,ref=ghcr.io/viscalyx/devshell-dsc:buildcache"
           # cache-to: "type=registry,ref=ghcr.io/viscalyx/devshell-dsc:buildcache,mode=max"
