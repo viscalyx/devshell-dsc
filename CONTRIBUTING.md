@@ -56,7 +56,7 @@ docker compose run --rm dev
 ## Rebuilding the Container
 
 > [!IMPORTANT]
-> To securely inject secrets (e.g., GitHub tokens) without baking them into image layers or build history, enable BuildKit on every build. Do not use _Docker Compose_ v1 (`docker-compose`) because it does not support the secure arguments. Always use _Docker Compose_ v2 (`docker compose`).
+ > Docker Desktop 4.x and above has BuildKit enabled by default. For older Docker versions or CLI, enable BuildKit by prefixing builds with `DOCKER_BUILDKIT=1`. Docker Compose v1 (`docker-compose`) does not support secure build arguments; use Compose v2 (`docker compose`). For more details, see [Docker Build Enhancements docs](https://docs.docker.com/develop/develop-images/build_enhancements/).
 
 ### Docker
 
@@ -81,6 +81,63 @@ DOCKER_BUILDKIT=1 docker build --no-cache -t devshell:dsc .
 ```sh
 docker compose build --no-cache dev
 ```
+
+## Testing Max-Mode Attestations Locally
+
+Max-mode attestations are automatically enabled in CI/CD workflows for production builds and security scanning. However, developers can test these locally to verify Docker Scout integration or troubleshoot attestation-related issues.
+
+### Prerequisites for Local Attestation Testing
+
+- Docker BuildKit enabled (automatically enabled in modern Docker versions)
+- Docker Scout CLI (optional, for local scanning)
+
+### Building with Max-Mode Attestations
+
+To build locally with the same attestation settings used in production:
+
+```sh
+# Basic build with max-mode attestations
+DOCKER_BUILDKIT=1 docker build \
+  --sbom=mode=max \
+  --provenance=mode=max \
+  -t devshell:dsc .
+```
+
+```sh
+# No-cache build with max-mode attestations
+DOCKER_BUILDKIT=1 docker build \
+  --no-cache \
+  --sbom=mode=max \
+  --provenance=mode=max \
+  -t devshell:dsc .
+```
+
+### Testing with Docker Scout Locally
+
+If you have Docker Scout CLI installed, you can test the security scanning locally:
+
+```sh
+# Build with attestations
+DOCKER_BUILDKIT=1 docker build \
+  --sbom=mode=max \
+  --provenance=mode=max \
+  -t devshell:dsc .
+
+# Scan for vulnerabilities
+docker scout cves devshell:dsc
+
+# Compare with latest published image (requires Docker Hub access)
+docker scout compare devshell:dsc --to viscalyx/devshell-dsc:latest
+```
+
+> [!NOTE]
+> Max-mode attestations add additional build time and storage overhead. They are primarily useful for:
+>
+> - Testing the full CI/CD security pipeline locally
+> - Debugging attestation-related issues
+> - Verifying Docker Scout integration before pushing changes
+>
+> For regular development and testing, the standard build commands without attestations are sufficient.
 
 ## Publishing
 
