@@ -51,7 +51,8 @@ jobs:
           GH_READ_TOKEN: ${{ secrets.GH_READ_TOKEN }}  # provide token for provenance
         with:
           builder: ${{ steps.buildx.outputs.name }}     # use configured Buildx builder
-          secrets: ${{ env.GH_READ_TOKEN && format('gh_read_token={0}', env.GH_READ_TOKEN) || '' }}  # inject read token
+          secrets: | # inject read token
+            ${{ env.GH_READ_TOKEN != '' && format('gh_read_token={0}', env.GH_READ_TOKEN) }}
           context: .
           platforms: |
             linux/amd64
