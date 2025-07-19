@@ -32,6 +32,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
+          platforms: linux/amd64, linux/arm64
           tags: ${{ env.IMAGE_NAME }}:${{ env.TAG }}
           sbom: mode=max              # max-mode SBOM for Scout
           provenance: mode=max        # max-mode provenance for Scout
