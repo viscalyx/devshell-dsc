@@ -74,12 +74,11 @@ jobs:
         id: scout
         uses: docker/scout-action@v1
         with:
-          policy: scout-policies/policies
           # dockerhub-user: ${{ secrets.DOCKERHUB_USERNAME }}   # Docker Hub user for Scout auth
           # dockerhub-password: ${{ secrets.DOCKERHUB_TOKEN }}  # Docker Hub token for Scout auth
           # registry-user: ${{ secrets.GHCR_USERNAME }}         # GHCR user for fetching PR image
           # registry-password: ${{ secrets.GHCR_TOKEN }}        # GHCR token for fetching PR image
-          command: cves,compare            # list CVEs and compare to prod baseline
+          command: cves,recommendations,compare            # list CVEs and compare to prod baseline
           image: ghcr.io/${{ github.repository }}:${{ env.TAG }}
           organization: ${{ github.repository_owner }}   # namespace for baseline pull
           # --- comparison baseline  ---------------------------------------
@@ -93,6 +92,7 @@ jobs:
           sarif-file: scout-results.sarif  # upload to Security tab
           write-comment: true              # nice PR comment
           summary: true
+          github-token: ${{ secrets.GITHUB_TOKEN }} # token for PR comment
 
       - name: Upload SARIF to GitHub code-scanning
         uses: github/codeql-action/upload-sarif@v3
