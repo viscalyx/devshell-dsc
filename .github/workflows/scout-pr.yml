@@ -66,10 +66,10 @@ jobs:
         id: scout
         uses: docker/scout-action@v1
         with:
-          dockerhub-user: ${{ secrets.DOCKERHUB_USERNAME }}   # Docker Hub user for Scout auth
-          dockerhub-password: ${{ secrets.DOCKERHUB_TOKEN }}  # Docker Hub token for Scout auth
-          registry-user: ${{ secrets.GHCR_USERNAME }}         # GHCR user for fetching PR image
-          registry-password: ${{ secrets.GHCR_TOKEN }}        # GHCR token for fetching PR image
+          # dockerhub-user: ${{ secrets.DOCKERHUB_USERNAME }}   # Docker Hub user for Scout auth
+          # dockerhub-password: ${{ secrets.DOCKERHUB_TOKEN }}  # Docker Hub token for Scout auth
+          # registry-user: ${{ secrets.GHCR_USERNAME }}         # GHCR user for fetching PR image
+          # registry-password: ${{ secrets.GHCR_TOKEN }}        # GHCR token for fetching PR image
           command: cves,compare            # list CVEs and compare to prod baseline
           image: ghcr.io/${{ github.repository }}:${{ env.TAG }}
           organization: ${{ github.repository_owner }}   # namespace for baseline pull
