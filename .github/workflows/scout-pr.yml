@@ -38,7 +38,7 @@ jobs:
           sbom: mode=max              # max-mode SBOM for Scout
           provenance: mode=max        # max-mode provenance for Scout
           push: false                 # do not push
-          output: type=docker,dest=scout-image.tar  # export single-arch image to tar
+          outputs: type=docker,dest=scout-image.tar  # export single-arch image to tar
 
       - name: Load built image into Docker
         run: docker load -i scout-image.tar
