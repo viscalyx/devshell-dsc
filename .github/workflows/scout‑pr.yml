@@ -1,0 +1,61 @@
+name: Container security (Docker Scout)
+
+on:
+  pull_request:
+    branches: [ main ]
+    paths:
+      - '**/Dockerfile'          # rebuild only when something container‑related changes
+      - '.github/workflows/**'
+
+jobs:
+  scout:
+    runs-on: ubuntu-latest
+    permissions:              # required for PR comments + Code‑scanning upload
+      contents: read
+      pull-requests: write
+      security-events: write
+
+    env:
+      IMAGE_NAME: ${{ github.repository }}
+      TAG: pr-${{ github.event.number }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # If you push to Docker Hub/ghcr later, login here
+      # - uses: docker/login-action@v3 …
+
+      - name: Build image (with SBOM & provenance, but don’t push)
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          tags: ${{ env.IMAGE_NAME }}:${{ env.TAG }}
+          sbom: mode=max              # max-mode SBOM for Scout
+          provenance: mode=max        # max-mode provenance for Scout
+          load: true                  # keep it in the local daemon
+
+      - name: Scan image with Docker Scout
+        id: scout
+        uses: docker/scout-action@v1
+        with:
+          command: cves,compare            # 1) list CVEs  2) compare to prod
+          image: ${{ env.IMAGE_NAME }}:${{ env.TAG }}
+          # --- comparison baseline  ---------------------------------------
+          to-latest: true                  # “prod” == latest tag in registry
+          # --- what should make the step fail -----------------------------
+          only-severities: critical,high   # we tolerate ≤ medium
+          exit-code: true                  # fail if *any* matching CVE left
+          exit-on: vulnerability           # fail if comparison adds new vulns
+          only-fixed: true                 # ignore unfixed issues
+          # --- UX helpers --------------------------------------------------
+          sarif-file: scout-results.sarif  # upload to Security tab
+          write-comment: true              # nice PR comment
+          summary: true
+
+      - name: Upload SARIF to GitHub code‑scanning
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: scout-results.sarif
