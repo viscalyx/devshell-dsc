@@ -48,7 +48,7 @@ jobs:
           # --- what should make the step fail -----------------------------
           only-severities: critical,high   # we tolerate ≤ medium
           exit-code: true                  # fail if *any* matching CVE left
-          exit-on: vulnerability           # fail if comparison adds new vulns
+          exit-on: vulnerability           # fail if comparison adds new vulnerabilities
           only-fixed: true                 # ignore unfixed issues
           # --- UX helpers --------------------------------------------------
           sarif-file: scout-results.sarif  # upload to Security tab
