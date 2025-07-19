@@ -47,7 +47,9 @@ jobs:
           builder: ${{ steps.buildx.outputs.name }}     # use configured Buildx builder
           secrets: ${{ env.GH_READ_TOKEN && format('gh_read_token={0}', env.GH_READ_TOKEN) || '' }}  # inject read token
           context: .
-          platforms: linux/amd64
+          platforms: |
+            linux/amd64
+            linux/arm64
           tags: |
             ghcr.io/${{ github.repository }}:${{ env.TAG }}
             ghcr.io/${{ github.repository }}:latest
