@@ -31,6 +31,7 @@ jobs:
 
       # If you push to Docker Hub/ghcr later, login here
       - name: Log in to Docker Hub for Scout
+        if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
         uses: docker/login-action@v3
         with:
           registry: docker.io
@@ -63,6 +64,7 @@ jobs:
         with:
           command: cves,compare            # list CVEs and compare to prod baseline
           image: 127.0.0.1:5000/${{ env.IMAGE_NAME }}:${{ env.TAG }}
+          organization: ${{ github.repository_owner }}   # namespace for baseline pull
           # --- comparison baseline  ---------------------------------------
           to-latest: true                  # compare against :latest in local registry
           # --- what should make the step fail -----------------------------
