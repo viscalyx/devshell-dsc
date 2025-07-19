@@ -63,6 +63,8 @@ jobs:
         with:
           dockerhub-user: ${{ secrets.DOCKERHUB_USERNAME }}   # Docker Hub user for Scout auth
           dockerhub-password: ${{ secrets.DOCKERHUB_TOKEN }}  # Docker Hub token for Scout auth
+          registry-user: ${{ github.actor }}                   # GHCR user for fetching images
+          registry-password: ${{ secrets.GHCR_TOKEN }}         # GHCR token for fetching images
           command: cves,compare            # list CVEs and compare to prod baseline
           image: ghcr.io/${{ github.repository }}:${{ env.TAG }}
           organization: ${{ github.repository_owner }}   # namespace for baseline pull
