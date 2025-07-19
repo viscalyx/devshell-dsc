@@ -61,8 +61,8 @@ jobs:
         id: scout
         uses: docker/scout-action@v1
         with:
-          token: ${{ secrets.DOCKERHUB_TOKEN }}    # use Docker Hub token for Scout auth
-          username: ${{ secrets.DOCKERHUB_USERNAME }}  # Docker Hub username
+          dockerhub-user: ${{ secrets.DOCKERHUB_USERNAME }}   # Docker Hub user for Scout auth
+          dockerhub-password: ${{ secrets.DOCKERHUB_TOKEN }}  # Docker Hub token for Scout auth
           command: cves,compare            # list CVEs and compare to prod baseline
           image: ghcr.io/${{ github.repository }}:${{ env.TAG }}
           organization: ${{ github.repository_owner }}   # namespace for baseline pull
