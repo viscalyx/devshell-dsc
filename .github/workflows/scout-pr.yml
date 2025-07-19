@@ -62,10 +62,18 @@ jobs:
           provenance: mode=max        # max-mode provenance for Scout
           push: true                  # push both tags to GHCR
 
+      - name: Checkout Docker Scout policies
+        uses: actions/checkout@v4
+        with:
+          repository: docker/scout-policies
+          token: ${{ secrets.GITHUB_TOKEN }}
+          path: scout-policies
+
       - name: Scan image with Docker Scout
         id: scout
         uses: docker/scout-action@v1
         with:
+          policy: scout-policies/policies
           # dockerhub-user: ${{ secrets.DOCKERHUB_USERNAME }}   # Docker Hub user for Scout auth
           # dockerhub-password: ${{ secrets.DOCKERHUB_TOKEN }}  # Docker Hub token for Scout auth
           # registry-user: ${{ secrets.GHCR_USERNAME }}         # GHCR user for fetching PR image
