@@ -40,7 +40,7 @@ jobs:
           password: ${{ secrets.GHCR_TOKEN }}      # PAT with packages:write scope
 
       - name: Build & push PR and baseline images to GHCR
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         env:
           GH_READ_TOKEN: ${{ secrets.GH_READ_TOKEN }}  # provide token for provenance
         with:
@@ -52,7 +52,6 @@ jobs:
             linux/arm64
           tags: |
             ghcr.io/${{ github.repository }}:${{ env.TAG }}
-            ghcr.io/${{ github.repository }}:latest
           sbom: mode=max              # max-mode SBOM for Scout
           provenance: mode=max        # max-mode provenance for Scout
           push: true                  # push both tags to GHCR
