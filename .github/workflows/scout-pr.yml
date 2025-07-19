@@ -14,6 +14,7 @@ jobs:
       contents: read
       pull-requests: write
       security-events: write
+      packages: write  # allow pushing to GHCR
 
     env:
       IMAGE_NAME: ${{ github.repository }}
