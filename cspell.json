@@ -25,6 +25,7 @@
     "viscalyx",
     "viscalyxbot",
     "sarif",
-    "cves"
+    "cves",
+    "buildkit"
   ]
 }
