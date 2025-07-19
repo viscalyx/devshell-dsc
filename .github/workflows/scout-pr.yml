@@ -35,8 +35,8 @@ jobs:
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          username: ${{ secrets.GHCR_USERNAME }}   # GitHub username
+          password: ${{ secrets.GHCR_TOKEN }}      # PAT with packages:write scope
 
       - name: Build & push PR and baseline images to GHCR
         uses: docker/build-push-action@v5
