@@ -23,6 +23,8 @@
     "psdsc",
     "shellcheck",
     "viscalyx",
-    "viscalyxbot"
+    "viscalyxbot",
+    "sarif",
+    "cves"
   ]
 }
