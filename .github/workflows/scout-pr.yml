@@ -38,17 +38,17 @@ jobs:
           sbom: mode=max              # max-mode SBOM for Scout
           provenance: mode=max        # max-mode provenance for Scout
           push: false                 # do not push
-          outputs: type=docker,dest=scout-image.tar  # export single-arch image to tar
+          outputs: type=oci,dest=scout-image.tar     # export single-arch OCI image to tar
 
       - name: Load built image into Docker
         run: docker load -i scout-image.tar
 
-      - name: Scan image with Docker Scout
+      - name: Scan local OCI archive with Docker Scout
         id: scout
         uses: docker/scout-action@v1
         with:
-          command: cves,compare            # 1) list CVEs  2) compare to prod
-          image: ${{ env.IMAGE_NAME }}:${{ env.TAG }}
+          command: cves           # scan local archive for CVEs
+          image: oci-archive:scout-image.tar
           # --- comparison baseline  ---------------------------------------
           to-latest: true                  # “prod” == latest tag in registry
           # --- what should make the step fail -----------------------------
