@@ -7,6 +7,9 @@ For any additional contributions, bug reports, or feature requests, please open 
 ## Table of Contents
 
 - [Prerequisites](#prerequisites)
+- [Clone the GitHub repository](#clone-the-github-repository)
+- [Running and Testing the DevShell Container](#running-and-testing-the-devshell-container)
+- [Rebuilding the Container](#rebuilding-the-container)
 - [Testing Max-Mode Attestations Locally](#testing-max-mode-attestations-locally)
 - [Publishing](#publishing)
 - [Required Token Environment Variables](#required-token-environment-variables)
