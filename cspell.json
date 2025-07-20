@@ -3,8 +3,11 @@
   "language": "en",
   "ignoreWords": [
     "buildcache",
+    "buildkit",
     "buildx",
     "chsh",
+    "containerd",
+    "cves",
     "dcarbone",
     "devshell",
     "dockerized",
@@ -21,11 +24,10 @@
     "powerline",
     "powerlevel",
     "psdsc",
+    "quickview",
+    "sarif",
     "shellcheck",
     "viscalyx",
-    "viscalyxbot",
-    "sarif",
-    "cves",
-    "buildkit"
+    "viscalyxbot"
   ]
 }
