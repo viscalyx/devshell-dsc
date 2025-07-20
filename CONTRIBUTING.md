@@ -56,7 +56,7 @@ docker compose run --rm dev
 ## Rebuilding the Container
 
 > [!IMPORTANT]
- > Docker Desktop 4.x and above has BuildKit enabled by default. For older Docker versions or CLI, enable BuildKit by prefixing builds with `DOCKER_BUILDKIT=1`. Docker Compose v1 (`docker-compose`) does not support secure build arguments; use Compose v2 (`docker compose`). For more details, see [Docker Build Enhancements docs](https://docs.docker.com/develop/develop-images/build_enhancements/).
+> Docker Desktop 4.x and above has BuildKit enabled by default. For older Docker versions or CLI, enable BuildKit by prefixing builds with `DOCKER_BUILDKIT=1`. Docker Compose v1 (`docker-compose`) does not support secure build arguments; use Compose v2 (`docker compose`). For more details, see [Docker Build Enhancements docs](https://docs.docker.com/develop/develop-images/build_enhancements/).
 
 ### Docker
 
