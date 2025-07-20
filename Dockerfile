@@ -1,6 +1,8 @@
 # syntax=docker/dockerfile:experimental
 # ---- Base image -------------------------------------------------------------
 FROM ubuntu:24.04
+LABEL org.opencontainers.image.source="https://github.com/viscalyx/devshell-dsc"
+
 SHELL ["/bin/bash", "-e", "-o", "pipefail", "-c"]
 
 ENV POWERSHELL_VERSION=7.5.2
