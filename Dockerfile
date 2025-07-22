@@ -1,6 +1,11 @@
 # syntax=docker/dockerfile:experimental
 # ---- Base image -------------------------------------------------------------
 FROM ubuntu:25.04
+LABEL org.opencontainers.image.source="https://github.com/viscalyx/devshell-dsc" \
+      org.opencontainers.image.description="Dockerized Ubuntu 24.04 dev environment with Zsh (Oh My Zsh & Powerlevel10k), PowerShell & DSC v3 pre-configured for seamless developer workflows." \
+      org.opencontainers.image.version="latest" \
+      org.opencontainers.image.licenses="MIT"
+
 SHELL ["/bin/bash", "-e", "-o", "pipefail", "-c"]
 
 ENV POWERSHELL_VERSION=7.5.2
@@ -10,6 +15,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 # ---- Non-interactive apt install -------------------------------------------
 # hadolint ignore=DL3008
 RUN apt-get update && \
+    apt-get upgrade -y --no-install-recommends && \
     apt-get install -y --no-install-recommends \
         zsh git curl wget ca-certificates locales lsb-release fontconfig dotnet-sdk-9.0 sudo vim libicu76 \
         openssh-client && \

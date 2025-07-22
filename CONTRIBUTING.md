@@ -4,6 +4,16 @@ Thank you for your interest in contributing to **devshell-dsc**! This guide expl
 
 For any additional contributions, bug reports, or feature requests, please open an issue or pull request on the GitHub repository.
 
+## Table of Contents
+
+- [Prerequisites](#prerequisites)
+- [Clone the GitHub repository](#clone-the-github-repository)
+- [Running and Testing the DevShell Container](#running-and-testing-the-devshell-container)
+- [Rebuilding the Container](#rebuilding-the-container)
+- [Testing Max-Mode Attestations Locally](#testing-max-mode-attestations-locally)
+- [Publishing](#publishing)
+- [Required Token Environment Variables](#required-token-environment-variables)
+
 ## Prerequisites
 
 - Docker (v28 or higher)
@@ -56,7 +66,7 @@ docker compose run --rm dev
 ## Rebuilding the Container
 
 > [!IMPORTANT]
-> To securely inject secrets (e.g., GitHub tokens) without baking them into image layers or build history, enable BuildKit on every build. Do not use _Docker Compose_ v1 (`docker-compose`) because it does not support the secure arguments. Always use _Docker Compose_ v2 (`docker compose`).
+> Docker Desktop 4.x and above has BuildKit enabled by default. For older Docker versions or CLI, enable BuildKit by prefixing builds with `DOCKER_BUILDKIT=1`. Docker Compose v1 (`docker-compose`) does not support secure build arguments; use Compose v2 (`docker compose`). For more details, see [Docker Build Enhancements docs](https://docs.docker.com/develop/develop-images/build_enhancements/).
 
 ### Docker
 
@@ -82,6 +92,89 @@ DOCKER_BUILDKIT=1 docker build --no-cache -t devshell:dsc .
 docker compose build --no-cache dev
 ```
 
+## Testing Max-Mode Attestations Locally
+
+Max-mode attestations are automatically enabled in CI/CD workflows for production builds and security scanning. However, developers can test these locally to verify Docker Scout integration or troubleshoot attestation-related issues.
+
+Max-mode attestations add additional build time and storage overhead. They are primarily useful for:
+
+- Testing the full CI/CD security pipeline locally
+- Debugging attestation-related issues
+- Verifying Docker Scout integration before pushing changes
+
+For regular development and testing, the standard build commands without attestations are sufficient.
+
+### Prerequisites for Local Attestation Testing
+
+- Docker Desktop with containerd image store enabled
+- Docker BuildKit enabled (automatically enabled in modern Docker versions)
+- Docker Scout CLI (optional, for local scanning)
+
+### Enable Containerd Image Store in Docker Desktop
+
+Max-mode attestations require the containerd image store to be enabled in Docker Desktop:
+
+1. Open **Docker Desktop**
+1. Go to **Settings** → **General**
+1. Enable **"Use containerd for pulling and storing images"**
+1. Click **Apply & restart**
+1. Wait for Docker Desktop to restart
+
+> [!IMPORTANT]
+> Without enabling the containerd image store, you will get the error: "Attestation is not supported for the docker driver. Switch to a different driver, or turn on the containerd image store, and try again."
+
+### Building with Max-Mode Attestations
+
+To build locally with the same attestation settings used in production:
+
+```sh
+# Basic build with max-mode attestations
+docker buildx build \
+  --platform linux/amd64,linux/arm64 \
+  --sbom=mode=max \
+  --provenance=mode=max \
+  --tag devshell-dsc-dev:latest \
+  --load \
+  .
+```
+
+```sh
+# No-cache build with max-mode attestations
+docker buildx build \
+  --platform linux/amd64,linux/arm64  \
+  --sbom=mode=max \
+  --provenance=mode=max \
+  --tag devshell-dsc-dev:latest \
+  --no-cache \
+  --load \
+  .
+```
+
+### Testing with Docker Scout Locally
+
+After building your image with max-mode attestations (see “Building with Max-Mode Attestations”), scan locally:
+
+```sh
+# Quickview the image with Docker Scout
+docker scout quickview local://devshell-dsc-dev:latest
+
+# Scan vulnerabilities using local locator
+docker scout cves local://devshell-dsc-dev:latest
+
+# View base image update recommendations
+docker scout recommendations local://devshell-dsc-dev:latest
+
+# Quickview with organization policies applied
+docker scout quickview local://devshell-dsc-dev:latest --org viscalyx
+```
+
+#### Compare against the latest published image (requires Docker Hub access)
+
+```sh
+# Compare against the latest published image (requires Docker Hub access)
+docker scout compare local://devshell-dsc-dev:latest --to registry://docker.io/viscalyx/devshell-dsc:latest
+```
+
 ## Publishing
 
 Publishing happens automatically when a GitHub release tag using semantic versioning in the format `v1.0.0` is created.
@@ -92,71 +185,6 @@ Build the `latest` tag:
 
 ```sh
 docker build -t viscalyx/devshell-dsc:latest .
-```
-
-### Publish to Docker Hub
-
-```sh
-op item get "<item>" --field password --reveal | docker login --username viscalyx --password-stdin
-docker push viscalyx/devshell-dsc:latest
-```
-
-Logout from Docker Hub:
-
-```sh
-docker logout
-```
-
-### Publish to GitHub Container Registry
-
-**Required GitHub Token permissions**:
-
-- **Packages**: Read & write
-- **Packages**: Delete package versions (optional)
-- (If publishing to a private repo) **Repository**: Read & write
-
->[!IMPORTANT]
->Currently only GitHub classic Personal Access Token works, not fine-grained Personal Access Tokens.
-
-Tag the image for GHCR:
-
-```sh
-docker tag viscalyx/devshell-dsc:latest ghcr.io/viscalyx/devshell-dsc:latest
-```
-
-Login to GHCR and push:
-
-```sh
-op item get "<item>" --field password --reveal | docker login ghcr.io -u viscalyxbot --password-stdin
-docker push ghcr.io/viscalyx/devshell-dsc:latest
-```
-
-Logout from GHCR:
-
-```sh
-docker logout ghcr.io
-```
-
-### Make GHCR Package Public
-
-Once pushed, GHCR packages default to private. To switch to public:
-
-- **Via GitHub UI**: Go to your GitHub account > Settings > Packages, select `devshell-dsc`, and change visibility to **Public**.
-
-- **Via API** (classic PAT or GH_TOKEN with `packages:read` & `packages:write`):
-
-```sh
-curl -X PUT \
-  -H "Authorization: token $GITHUB_TOKEN" \
-  -H "Accept: application/vnd.github.v3+json" \
-  https://api.github.com/user/packages/container/devshell-dsc/visibility \
-  -d '{"visibility":"public"}'
-```
-
-- **Via GitHub CLI**:
-
-```sh
-gh api -X PUT /user/packages/container/devshell-dsc/visibility -F visibility=public
 ```
 
 ## Required Token Environment Variables
