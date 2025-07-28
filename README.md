@@ -1,7 +1,6 @@
 # DevShell DSC Container
 
-Ubuntu 24.04 development environment with PowerShell, DSC v3, and Zsh
-(Oh My Zsh & Powerlevel10k) pre-configured.
+Ubuntu 24.04 development environment with PowerShell, DSC v3, and Zsh (Oh My Zsh & Powerlevel10k) pre-configured.
 
 ## What's Included
 
@@ -25,8 +24,7 @@ docker pull viscalyx/devshell-dsc:latest
 
 ### Run the Container
 
-Run the Container to launch an interactive development shell with your
-local project mounted:
+Run the Container to launch an interactive development shell with your local project mounted:
 
 **Using Bash/Zsh:**
 
