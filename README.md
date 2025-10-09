@@ -1,6 +1,6 @@
 # DevShell DSC Container
 
-Ubuntu 25.10 development environment with PowerShell, DSC v3, and Zsh (Oh My Zsh & Powerlevel10k) pre-configured.
+Ubuntu 25.04 development environment with PowerShell, DSC v3, and Zsh (Oh My Zsh & Powerlevel10k) pre-configured.
 
 ## What's Included
 
