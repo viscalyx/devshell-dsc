@@ -17,7 +17,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && \
     apt-get upgrade -y --no-install-recommends && \
     apt-get install -y --no-install-recommends \
-        zsh git curl wget ca-certificates locales lsb-release fontconfig dotnet-sdk-8.0 sudo vim \
+        zsh git curl wget ca-certificates locales lsb-release fontconfig dotnet-sdk-9.0 sudo vim \
         openssh-client && \
     locale-gen en_US.UTF-8 && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
