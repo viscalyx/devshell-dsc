@@ -1,14 +1,14 @@
 # syntax=docker/dockerfile:experimental
 # ---- Base image -------------------------------------------------------------
-FROM ubuntu:24.10
+FROM ubuntu:25.10
 LABEL org.opencontainers.image.source="https://github.com/viscalyx/devshell-dsc" \
-      org.opencontainers.image.description="Dockerized Ubuntu 24.04 dev environment with Zsh (Oh My Zsh & Powerlevel10k), PowerShell & DSC v3 pre-configured for seamless developer workflows." \
+      org.opencontainers.image.description="Dockerized Ubuntu 25.10 dev environment with Zsh (Oh My Zsh & Powerlevel10k), PowerShell & DSC v3 pre-configured for seamless developer workflows." \
       org.opencontainers.image.version="latest" \
       org.opencontainers.image.licenses="MIT"
 
 SHELL ["/bin/bash", "-e", "-o", "pipefail", "-c"]
 
-ENV POWERSHELL_VERSION=7.5.2
+ENV POWERSHELL_VERSION=7.5.3
 ENV POWERSHELL_PACKAGE_REVISION=1
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -71,7 +71,8 @@ COPY instant-prompt.zsh /root/instant-prompt.zsh
 RUN chsh -s /usr/bin/zsh root && \
     # configure default theme and plugins for root
     sed -i 's|^ZSH_THEME=.*|ZSH_THEME="powerlevel10k/powerlevel10k"|' /root/.zshrc && \
-    sed -i 's|^plugins=.*|plugins=(git ssh-agent zsh-autosuggestions zsh-syntax-highlighting fast-syntax-highlighting zsh-autocomplete)|' /root/.zshrc && \
+    # sed -i 's|^plugins=.*|plugins=(git ssh-agent zsh-autosuggestions zsh-syntax-highlighting fast-syntax-highlighting zsh-autocomplete)|' /root/.zshrc && \
+    sed -i 's|^plugins=.*|plugins=(git ssh-agent zsh-autosuggestions zsh-syntax-highlighting fast-syntax-highlighting)|' /root/.zshrc && \
     echo '[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh' >> /root/.zshrc && \
     # Prepend Powerlevel10k instant prompt block to root .zshrc using project file
     cat /root/instant-prompt.zsh /root/.zshrc > /root/.zshrc.tmp && mv /root/.zshrc.tmp /root/.zshrc
