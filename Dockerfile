@@ -51,7 +51,7 @@ RUN sh -c "$(wget --progress=dot:giga -O- https://raw.githubusercontent.com/ohmy
     git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions "${ZSH_CUSTOM:-/root/.oh-my-zsh/custom}/plugins/zsh-autosuggestions" && \
     git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting "${ZSH_CUSTOM:-/root/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting" && \
     git clone --depth=1 https://github.com/zdharma-continuum/fast-syntax-highlighting "${ZSH_CUSTOM:-/root/.oh-my-zsh/custom}/plugins/fast-syntax-highlighting" && \
-    git clone --depth=1 https://github.com/marlonrichert/zsh-autocomplete "${ZSH_CUSTOM:-/root/.oh-my-zsh/custom}/plugins/zsh-autocomplete" && \
+    #git clone --depth=1 https://github.com/marlonrichert/zsh-autocomplete "${ZSH_CUSTOM:-/root/.oh-my-zsh/custom}/plugins/zsh-autocomplete" && \
     git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "${ZSH_CUSTOM:-/root/.oh-my-zsh/custom}/themes/powerlevel10k" && \
     # Install Powerlevel10k MesloLGS NF fonts
     for variant in Regular Bold Italic "Bold Italic"; do \
