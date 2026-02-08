@@ -105,9 +105,9 @@ RUN --mount=type=secret,id=gh_read_token pwsh -NoLogo -NoProfile -Command "\$Err
 RUN DSC_DIR=/opt/microsoft/dsc && \
     DSC_VERSION="v$(dsc --version | awk '{print $2}')" && \
     if [ ! -f "${DSC_DIR}/PowerShell_adapter.dsc.resource.json" ]; then \
-        curl -fsSL \
+        wget -q \
             "https://raw.githubusercontent.com/PowerShell/DSC/${DSC_VERSION}/adapters/powershell/PowerShell_adapter.dsc.resource.json" \
-            -o "${DSC_DIR}/PowerShell_adapter.dsc.resource.json"; \
+            -O "${DSC_DIR}/PowerShell_adapter.dsc.resource.json"; \
     fi
 
 # Switch back to dialog for any ad-hoc use of apt-get
