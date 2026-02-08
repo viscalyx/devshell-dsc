@@ -4,7 +4,7 @@ Ubuntu 24.04 development environment with PowerShell, DSC v3, and Zsh (Oh My Zsh
 
 ## What's Included
 
-- PowerShell 7.5.2 & DSC v3
+- PowerShell 7.5.4 & DSC v3
 - .NET SDK 8.0
 - Git & OpenSSH Client
 - Zsh with Oh My Zsh & Powerlevel10k
