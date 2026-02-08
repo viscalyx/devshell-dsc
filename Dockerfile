@@ -8,7 +8,7 @@ LABEL org.opencontainers.image.source="https://github.com/viscalyx/devshell-dsc"
 
 SHELL ["/bin/bash", "-e", "-o", "pipefail", "-c"]
 
-ENV POWERSHELL_VERSION=7.5.3
+ENV POWERSHELL_VERSION=7.5.4
 ENV POWERSHELL_PACKAGE_REVISION=1
 ENV DEBIAN_FRONTEND=noninteractive
 

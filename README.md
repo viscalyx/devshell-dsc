@@ -4,7 +4,7 @@ Ubuntu 25.04 development environment with PowerShell, DSC v3, and Zsh (Oh My Zsh
 
 ## What's Included
 
-- PowerShell 7.5.3 & DSC v3
+- PowerShell 7.5.4 & DSC v3
 - .NET SDK 9.0
 - Git & OpenSSH Client
 - Zsh with Oh My Zsh & Powerlevel10k
