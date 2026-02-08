@@ -201,7 +201,15 @@ Publishing happens automatically when a GitHub release tag using semantic versio
 3. **The publish workflow runs automatically.**
    Pushing the `v*.*.*` tag triggers the
    [docker-publish.yml](/.github/workflows/docker-publish.yml) workflow which
-   builds and pushes multi-platform images.
+   builds and pushes multi-platform images, then creates a GitHub Release with
+   auto-generated release notes (assembled from merged pull requests).
+
+   Alternatively, you can create the tag and release in one step using the
+   GitHub CLI:
+
+   ```sh
+   gh release create v1.2.3 --generate-notes
+   ```
 
 > [!NOTE]
 > The publish workflow can also be triggered manually from the **Actions** tab
