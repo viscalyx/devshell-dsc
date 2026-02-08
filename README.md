@@ -1,37 +1,71 @@
 # DevShell DSC Container
 
-Dockerized Ubuntu 24.04 dev environment with Zsh (Oh My Zsh & Powerlevel10k), PowerShell & DSC v3 pre-configured for seamless developer workflows.
+Ubuntu 24.04 development environment with PowerShell, DSC v3, and Zsh (Oh My Zsh & Powerlevel10k) pre-configured.
 
-## Included Tools
+## What's Included
 
-- PowerShell 7.5.2 & DSC v3 support
+- PowerShell 7.5.4 & DSC v3
 - .NET SDK 8.0
-- Git
-- OpenSSH Client
-- Configured non-root 'developer' user with passwordless sudo
-- Zsh & Oh My Zsh
-- Health check via PowerShell
+- Git & OpenSSH Client
+- Zsh with Oh My Zsh & Powerlevel10k
+- Non-root `developer` user with sudo access
 
-## Prerequisites
-
-Ensure the following are installed on your host system:
+## Requirements
 
 - Docker
 
 ## Quick Start
 
-Launch an interactive development shell with your project directory mounted:
-
-## Pull and Run from Docker Hub
-
-Use the published image from any local folder by pulling and running it with your current directory mounted:
+### Pull from Docker Hub
 
 ```bash
-# Pull the latest image
 docker pull viscalyx/devshell-dsc:latest
+```
 
+### Run the Container
+
+Run the Container to launch an interactive development shell with your local project mounted:
+
+**Using Bash/Zsh:**
+
+```bash
 # Run interactively, mounting current directory to /home/developer/work
 docker run --rm -it \
   -v "$(pwd)":/home/developer/work \
   viscalyx/devshell-dsc:latest
 ```
+
+**Using PowerShell:**
+
+```powershell
+# Run interactively, mounting current directory to /home/developer/work
+docker run --rm -it -v "${PWD}:/home/developer/work" viscalyx/devshell-dsc:latest
+```
+
+## Example Usage
+
+1. From your development machine, clone a DSC resource repository:
+
+   ```bash
+   git clone git@github.com:dsccommunity/SqlServerDsc.git
+   cd SqlServerDsc
+   ```
+
+1. Start the container with the cloned repository mounted:
+
+   ```bash
+   docker run --rm -it -v "$(pwd)":/home/developer/work viscalyx/devshell-dsc:latest
+   ```
+
+1. Once inside the container, for this example, start PowerShell
+
+   ```bash
+   pwsh
+   ```
+
+1. Build the project, and then list available DSC resources:
+
+   ```powershell
+   ./build.ps1 -ResolveDependency -Tasks build
+   dsc resource list --adapter Microsoft.Dsc/PowerShell
+   ```
