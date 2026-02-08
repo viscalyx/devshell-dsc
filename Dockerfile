@@ -102,10 +102,10 @@ RUN --mount=type=secret,id=gh_read_token pwsh -NoLogo -NoProfile -Command "\$Err
 #       Windows PowerShell which is not available on Linux.
 # TODO: Remove this workaround once the DSCv3 install includes the adapter
 #       manifest automatically (track upstream issue).
-ENV DSC_VERSION=v3.2.0-preview.11
 RUN DSC_DIR=/opt/microsoft/dsc && \
+    DSC_VERSION="v$(dsc --version | awk '{print $2}')" && \
     if [ ! -f "${DSC_DIR}/PowerShell_adapter.dsc.resource.json" ]; then \
-        sudo curl -fsSL \
+        curl -fsSL \
             "https://raw.githubusercontent.com/PowerShell/DSC/${DSC_VERSION}/adapters/powershell/PowerShell_adapter.dsc.resource.json" \
             -o "${DSC_DIR}/PowerShell_adapter.dsc.resource.json"; \
     fi
