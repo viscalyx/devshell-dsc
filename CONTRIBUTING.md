@@ -100,6 +100,63 @@ docker compose build --no-cache dev
 
 Max-mode attestations are automatically enabled in CI/CD workflows for production builds and security scanning. However, developers can test these locally to verify Docker Scout integration or troubleshoot attestation-related issues.
 
+### Prerequisites for Local Attestation Testing
+
+- Docker BuildKit enabled (automatically enabled in modern Docker versions)
+- Docker Scout CLI (optional, for local scanning)
+
+### Building with Max-Mode Attestations
+
+To build locally with the same attestation settings used in production:
+
+```sh
+# Basic build with max-mode attestations
+DOCKER_BUILDKIT=1 docker build \
+  --sbom=mode=max \
+  --provenance=mode=max \
+  -t devshell:dsc .
+```
+
+```sh
+# No-cache build with max-mode attestations
+DOCKER_BUILDKIT=1 docker build \
+  --no-cache \
+  --sbom=mode=max \
+  --provenance=mode=max \
+  -t devshell:dsc .
+```
+
+### Testing with Docker Scout Locally
+
+If you have Docker Scout CLI installed, you can test the security scanning locally:
+
+```sh
+# Build with attestations
+DOCKER_BUILDKIT=1 docker build \
+  --sbom=mode=max \
+  --provenance=mode=max \
+  -t devshell:dsc .
+
+# Scan for vulnerabilities
+docker scout cves devshell:dsc
+
+# Compare with latest published image (requires Docker Hub access)
+docker scout compare devshell:dsc --to viscalyx/devshell-dsc:latest
+```
+
+> [!NOTE]
+> Max-mode attestations add additional build time and storage overhead. They are primarily useful for:
+>
+> - Testing the full CI/CD security pipeline locally
+> - Debugging attestation-related issues
+> - Verifying Docker Scout integration before pushing changes
+>
+> For regular development and testing, the standard build commands without attestations are sufficient.
+
+## Publishing
+
+Max-mode attestations are automatically enabled in CI/CD workflows for production builds and security scanning. However, developers can test these locally to verify Docker Scout integration or troubleshoot attestation-related issues.
+
 Max-mode attestations add additional build time and storage overhead. They are primarily useful for:
 
 - Testing the full CI/CD security pipeline locally

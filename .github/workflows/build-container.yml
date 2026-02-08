@@ -34,7 +34,7 @@ jobs:
           tags: devshell-dsc:${{ github.sha }}
           # Only inject the secret when it exists – empty values are ignored
           secrets: | # inject read token
-            gh_read_token=${{ env.GH_READ_TOKEN }}
+            ${{ env.GH_READ_TOKEN != '' && format('gh_read_token={0}', env.GH_READ_TOKEN) }}
           sbom: mode=max              # max-mode SBOM for Scout
           provenance: mode=max        # max-mode provenance for Scout
           push: false
