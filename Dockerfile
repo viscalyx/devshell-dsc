@@ -92,6 +92,24 @@ RUN mkdir -p /root/.ssh && chmod 700 /root/.ssh && \
 # hadolint ignore=SC2154
 RUN --mount=type=secret,id=gh_read_token pwsh -NoLogo -NoProfile -Command "\$ErrorActionPreference='Stop'; Install-PSResource 'PSDSC' -TrustRepository -Quiet -ErrorAction 'Stop'; if(Test-Path '/run/secrets/gh_read_token'){ \$plainToken=(Get-Content '/run/secrets/gh_read_token' -Raw).Trim(); \$secureToken=ConvertTo-SecureString \$plainToken -AsPlainText -Force; Install-DscExe -IncludePrerelease -Force -ErrorAction 'Stop' -Token \$secureToken } else { Install-DscExe -IncludePrerelease -Force -ErrorAction 'Stop' }"
 
+# ---- WORKAROUND: Missing adapter manifest in DSCv3 install -----------------
+# The DSCv3 install does not yet ship the PowerShell adapter JSON manifest
+# into the dsc binary directory. Without this file the adapter
+# Microsoft.DSC/PowerShell cannot be used and `dsc resource list` will not
+# discover PowerShell-based DSC resources. This copies the manifest from the
+# upstream repository if it is not already present.
+# Note: WindowsPowerShell_adapter is intentionally excluded — it requires
+#       Windows PowerShell which is not available on Linux.
+# TODO: Remove this workaround once the DSCv3 install includes the adapter
+#       manifest automatically (track upstream issue).
+RUN DSC_DIR=/opt/microsoft/dsc && \
+    DSC_VERSION="v$(dsc --version | awk '{print $2}')" && \
+    if [ ! -f "${DSC_DIR}/PowerShell_adapter.dsc.resource.json" ]; then \
+        wget -q \
+            "https://raw.githubusercontent.com/PowerShell/DSC/${DSC_VERSION}/adapters/powershell/PowerShell_adapter.dsc.resource.json" \
+            -O "${DSC_DIR}/PowerShell_adapter.dsc.resource.json"; \
+    fi
+
 # Switch back to dialog for any ad-hoc use of apt-get
 ENV DEBIAN_FRONTEND=dialog
 
