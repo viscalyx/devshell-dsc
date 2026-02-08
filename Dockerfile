@@ -1,15 +1,21 @@
 # syntax=docker/dockerfile:experimental
 # ---- Base image -------------------------------------------------------------
 FROM ubuntu:24.04
+LABEL org.opencontainers.image.source="https://github.com/viscalyx/devshell-dsc" \
+      org.opencontainers.image.description="Dockerized Ubuntu 24.04 LTS dev environment with Zsh (Oh My Zsh & Powerlevel10k), PowerShell & DSC v3 pre-configured for seamless developer workflows." \
+      org.opencontainers.image.version="latest" \
+      org.opencontainers.image.licenses="MIT"
+
 SHELL ["/bin/bash", "-e", "-o", "pipefail", "-c"]
 
-ENV POWERSHELL_VERSION=7.5.2
+ENV POWERSHELL_VERSION=7.5.4
 ENV POWERSHELL_PACKAGE_REVISION=1
 ENV DEBIAN_FRONTEND=noninteractive
 
 # ---- Non-interactive apt install -------------------------------------------
 # hadolint ignore=DL3008
 RUN apt-get update && \
+    apt-get upgrade -y --no-install-recommends && \
     apt-get install -y --no-install-recommends \
         zsh git curl wget ca-certificates locales lsb-release fontconfig dotnet-sdk-8.0 sudo vim \
         openssh-client && \
@@ -45,7 +51,7 @@ RUN sh -c "$(wget --progress=dot:giga -O- https://raw.githubusercontent.com/ohmy
     git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions "${ZSH_CUSTOM:-/root/.oh-my-zsh/custom}/plugins/zsh-autosuggestions" && \
     git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting "${ZSH_CUSTOM:-/root/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting" && \
     git clone --depth=1 https://github.com/zdharma-continuum/fast-syntax-highlighting "${ZSH_CUSTOM:-/root/.oh-my-zsh/custom}/plugins/fast-syntax-highlighting" && \
-    git clone --depth=1 https://github.com/marlonrichert/zsh-autocomplete "${ZSH_CUSTOM:-/root/.oh-my-zsh/custom}/plugins/zsh-autocomplete" && \
+    #git clone --depth=1 https://github.com/marlonrichert/zsh-autocomplete "${ZSH_CUSTOM:-/root/.oh-my-zsh/custom}/plugins/zsh-autocomplete" && \
     git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "${ZSH_CUSTOM:-/root/.oh-my-zsh/custom}/themes/powerlevel10k" && \
     # Install Powerlevel10k MesloLGS NF fonts
     for variant in Regular Bold Italic "Bold Italic"; do \
@@ -65,7 +71,8 @@ COPY instant-prompt.zsh /root/instant-prompt.zsh
 RUN chsh -s /usr/bin/zsh root && \
     # configure default theme and plugins for root
     sed -i 's|^ZSH_THEME=.*|ZSH_THEME="powerlevel10k/powerlevel10k"|' /root/.zshrc && \
-    sed -i 's|^plugins=.*|plugins=(git ssh-agent zsh-autosuggestions zsh-syntax-highlighting fast-syntax-highlighting zsh-autocomplete)|' /root/.zshrc && \
+    # sed -i 's|^plugins=.*|plugins=(git ssh-agent zsh-autosuggestions zsh-syntax-highlighting fast-syntax-highlighting zsh-autocomplete)|' /root/.zshrc && \
+    sed -i 's|^plugins=.*|plugins=(git ssh-agent zsh-autosuggestions zsh-syntax-highlighting fast-syntax-highlighting)|' /root/.zshrc && \
     echo '[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh' >> /root/.zshrc && \
     # Prepend Powerlevel10k instant prompt block to root .zshrc using project file
     cat /root/instant-prompt.zsh /root/.zshrc > /root/.zshrc.tmp && mv /root/.zshrc.tmp /root/.zshrc
