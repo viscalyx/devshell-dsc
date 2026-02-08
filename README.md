@@ -8,7 +8,7 @@ Ubuntu 24.04 development environment with PowerShell, DSC v3, and Zsh (Oh My Zsh
 - .NET SDK 8.0
 - Git & OpenSSH Client
 - Zsh with Oh My Zsh & Powerlevel10k
-- Non-root 'developer' user with sudo access
+- Non-root `developer` user with sudo access
 
 ## Requirements
 
