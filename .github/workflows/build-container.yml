@@ -26,7 +26,7 @@ jobs:
 
       - name: Build Docker image (BuildKit)
         if: ${{ env.GH_READ_TOKEN != '' }}
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           builder: ${{ steps.buildx.outputs.name }}
           context: .
